@@ -1,0 +1,9 @@
+image:
+  repository: leinb1dr/after-action-report
+  port: 8080
+replicaCount: 1
+config:
+  database: after-action-report
+  mongoHost: mongodb
+service:
+  port: 80

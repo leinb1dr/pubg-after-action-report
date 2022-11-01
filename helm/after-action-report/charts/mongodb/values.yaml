@@ -1,0 +1,10 @@
+replicaCount: 1
+image:
+  repository: mongo
+  tag: 5.0
+  port: 27017
+storage: 1Gi
+config:
+  database: after-action-report
+service:
+  port: 27017

@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "aar.fullname" . }}
+  labels:
+    app: {{ include "aar.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "aar.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "aar.fullname" . }}
+    spec:
+      containers:
+        - name: {{ include "aar.fullname" . }}
+          image: {{ .Values.image.repository }}
+          imagePullPolicy: Always
+          ports:
+          - name: aar
+            containerPort: {{ .Values.image.port }}
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 120
+            periodSeconds: 15
+          resources:
+            limits:
+              cpu: 500m
+              ephemeral-storage: 1Ki
+              memory: 1Gi
+            requests:
+              cpu: 100m
+              ephemeral-storage: 1Gi
+              memory: 500Mi
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "k8s"
+            - name: APP_PUBGTOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "aar.fullname" . }}-secret
+                  key: pubgToken
+            - name: APP_DISCORDWEBHOOK
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "aar.fullname" . }}-secret
+                  key: discordWebHook
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "aar.fullname" . }}-secret
+                  key: dbUsername
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "aar.fullname" . }}-secret
+                  key: dbPassword
+            - name: MONGO_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "aar.fullname" . }}-config
+                  key: mongoHost
+            - name: MONGO_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "aar.fullname" . }}-config
+                  key: databaseName

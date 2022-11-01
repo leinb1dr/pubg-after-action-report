@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "mongo.fullname" . }}
+spec:
+  serviceName: {{ include "mongo.fullname" . }}
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "mongo.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "mongo.fullname" . }}
+    spec:
+      containers:
+        - name: {{ include "mongo.fullname" . }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          ports:
+          - name: mongodb
+            containerPort: {{ .Values.image.port }}
+          env:
+            - name: MONGO_INITDB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "mongo.fullname" . }}-config
+                  key: database-name
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "mongo.fullname" . }}-secret
+                  key: MONGO_ROOT_USERNAME
+                  optional: false
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "mongo.fullname" . }}-secret
+                  key: MONGO_ROOT_PASSWORD
+                  optional: false
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "50m"
+            limits:
+              memory: "1Gi"
+              cpu: "100m"
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ include "mongo.fullname" . }}-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: {{ .Values.storage }}
