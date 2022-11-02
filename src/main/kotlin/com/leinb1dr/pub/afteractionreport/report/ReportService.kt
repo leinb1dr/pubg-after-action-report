@@ -45,6 +45,7 @@ class ReportService(
                     .flatMap { matchService.getMatch(it.id) }
                     .participantSearch(it.t2.pubgId)
             }
+            .filter { it.second.stats.winPlace <= 10 }
             .formatReport()
     }
 

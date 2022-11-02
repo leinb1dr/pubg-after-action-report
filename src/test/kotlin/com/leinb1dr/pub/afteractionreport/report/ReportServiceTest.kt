@@ -84,7 +84,7 @@ class ReportServiceTest {
                             0,
                             294.12308,
                             2,
-                            27
+                            10
                         ),
                         shardId = "steam"
                     ),
