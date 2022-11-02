@@ -1,31 +1,56 @@
 package com.leinb1dr.pub.afteractionreport.registration
 
+import com.leinb1dr.pub.afteractionreport.core.PubgData
+import com.leinb1dr.pub.afteractionreport.core.PubgWrapper
 import com.leinb1dr.pub.afteractionreport.player.PlayerService
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchers.eq
-import org.mockito.Mockito
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
+import org.junit.jupiter.api.extension.ExtendWith
 import reactor.core.publisher.Mono
 
-@SpringBootTest
-class UserRegistrationServiceTest(
-    @Autowired private val playerService: PlayerService,
-) {
-    private val registrationRepository: RegistrationRepository = Mockito.mock(RegistrationRepository::class.java)
-    private val urs = UserRegistrationService(playerService, registrationRepository)
+@ExtendWith(MockKExtension::class)
+class UserRegistrationServiceTest {
+
+    @MockK
+    lateinit var registrationRepository: RegistrationRepository
+    @MockK
+    lateinit var playerService: PlayerService
+    lateinit var urs:UserRegistrationService
+
+    @BeforeEach
+    fun setup(){
+        urs = UserRegistrationService(playerService, registrationRepository)
+    }
 
     @Test
     fun registerUserTest() {
+        every { registrationRepository.insert(match {
+                it:RegisteredUser -> it.discordId=="358394398511202315" && it.pubgId == "account.0bee6c2ee01d44299425625bcb9e7ddb" } as RegisteredUser)
+        } returns Mono.just(
+                    RegisteredUser(
+                        discordId = "358394398511202315",
+                        pubgId = "account.0bee6c2ee01d44299425625bcb9e7ddb"
+                    )
+                )
 
-        Mockito.`when`(registrationRepository.insert(any(RegisteredUser::class.java))
-        ).thenReturn(
-            Mono.just(RegisteredUser(discordId = "358394398511202315", pubgId = "account.0bee6c2ee01d44299425625bcb9e7ddb"))
-        )
+        every { playerService.findPlayer("stealthg0d") } returns
+                Mono.just(
+                    PubgWrapper(
+                        data = arrayOf(
+                            PubgData(
+                                type = "Player",
+                                id = "account.0bee6c2ee01d44299425625bcb9e7ddb"
+                            )
+                        )
+                    )
+                )
+
 
         val registeredUser: RegisteredUser =
             runBlocking { urs.registerUser("358394398511202315", "stealthg0d").awaitSingle() }
@@ -35,10 +60,8 @@ class UserRegistrationServiceTest(
 
     @Test
     fun getRegisteredUserTest() {
-        Mockito.`when`(registrationRepository.findById(eq("358394398511202315"))
-        ).thenReturn(
-            Mono.just(RegisteredUser(discordId = "358394398511202315", pubgId = "account.0bee6c2ee01d44299425625bcb9e7ddb"))
-        )
+        every { registrationRepository.findById("358394398511202315") } returns Mono.just(RegisteredUser(discordId = "358394398511202315", pubgId = "account.0bee6c2ee01d44299425625bcb9e7ddb"))
+
 
         val registeredUser: RegisteredUser = runBlocking { urs.getRegisteredUser("358394398511202315").awaitSingle() }
 

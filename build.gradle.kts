@@ -33,9 +33,13 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
-		developmentOnly("org.springframework.boot:spring-boot-devtools")
+	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("com.ninja-squad:springmockk:3.0.1")
+	testImplementation("org.springframework.boot:spring-boot-starter-test"){
+		exclude(module = "junit")
+		exclude(module = "mockito-core")
+	}
 	testImplementation("io.projectreactor:reactor-test")
 }
 

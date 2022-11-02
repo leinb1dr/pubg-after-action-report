@@ -1,6 +1,6 @@
 package com.leinb1dr.pub.afteractionreport.core
 
-data class PubgWrapper(val data:Array<PubgData>?, val included:Array<PubgData>?) {
+data class PubgWrapper(val data:Array<PubgData>?=null, val included:Array<PubgData>?=null) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
