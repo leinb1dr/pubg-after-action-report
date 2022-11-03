@@ -10,7 +10,8 @@ management:
       stackdriver:
         project-id: leinb1dr-test-application-1
         enabled: true
-        steps: "10s"
+        steps: "10S"
+        batch-size: 100
     tags:
       application: after-action-report
       env: poc

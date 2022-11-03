@@ -40,6 +40,8 @@ spec:
             - name: serviceaccount-secret
               mountPath: /var/secrets/google
           env:
+#            - name: IO_MICROMETER_SHADED_IO_NETTY_TRANSPORT_NONATIVE
+#              value: "true"
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: /var/secrets/google/key.json
             - name: SPRING_PROFILES_ACTIVE
