@@ -1,6 +1,7 @@
 package com.leinb1dr.pub.afteractionreport.config
 
 import com.leinb1dr.pub.afteractionreport.registration.RegistrationRepository
+import com.leinb1dr.pub.afteractionreport.seasons.CurrentSeasonRepository
 import com.leinb1dr.pub.afteractionreport.usermatch.UserMatchRepository
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories
@@ -8,6 +9,6 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 
 @Configuration
 @EnableReactiveMongoRepositories(
-    basePackageClasses = [RegistrationRepository::class, UserMatchRepository::class]
+    basePackageClasses = [CurrentSeasonRepository::class, RegistrationRepository::class, UserMatchRepository::class]
 )
 class MongodbConfiguration

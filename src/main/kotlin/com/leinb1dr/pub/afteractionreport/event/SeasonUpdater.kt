@@ -25,7 +25,7 @@ class SeasonUpdater(@Autowired private val currentSeasonService: CurrentSeasonSe
         test.connect()
     }
 
-    @Scheduled(cron = "00 08 * * 3")
+    @Scheduled(cron = "00 00 08 * * 3")
     fun scheduleFixedRateTask() {
         sink.tryEmitNext(System.currentTimeMillis())
     }
