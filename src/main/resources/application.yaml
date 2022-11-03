@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: after-action-report
   main:
     allow-bean-definition-overriding: true
   jackson:
@@ -7,14 +9,6 @@ spring:
   data:
     mongodb:
       database: ${MONGO_DATABASE}
-logging:
-  level:
-    org:
-      springframework:
-        data:
-          mongodb:
-            core:
-              ReactiveMongoTemplate: DEBUG
 management:
   metrics:
     export:

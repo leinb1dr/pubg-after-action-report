@@ -30,15 +30,30 @@ spec:
           resources:
             limits:
               cpu: 500m
-              ephemeral-storage: 1Ki
+              ephemeral-storage: 1Gi
               memory: 1Gi
             requests:
               cpu: 100m
-              ephemeral-storage: 1Gi
+              ephemeral-storage: 1Ki
               memory: 500Mi
+          volumeMounts:
+            - name: serviceaccount-secret
+              mountPath: /var/secrets/google
           env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/google/key.json
             - name: SPRING_PROFILES_ACTIVE
               value: "k8s"
+            - name: SPRING_SECURITY_USER_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "aar.fullname" . }}-secret
+                  key: managementUser
+            - name: SPRING_SECURITY_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "aar.fullname" . }}-secret
+                  key: managementPassword
             - name: APP_PUBGTOKEN
               valueFrom:
                 secretKeyRef:
@@ -69,3 +84,7 @@ spec:
                 configMapKeyRef:
                   name: {{ include "aar.fullname" . }}-config
                   key: databaseName
+      volumes:
+        - name: serviceaccount-secret
+          secret:
+            secretName: {{ include "aar.fullname" . }}-serviceaccount-secret
