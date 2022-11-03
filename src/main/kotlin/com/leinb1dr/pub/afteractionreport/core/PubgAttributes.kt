@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 import java.time.OffsetDateTime
 
 abstract class PubgAttributes {
-    abstract val shardId: String
+    abstract val shardId: String?
 }
 
 data class UnknownAttributes(override val shardId: String) : PubgAttributes()
@@ -16,6 +16,8 @@ data class UnknownAttributes(override val shardId: String) : PubgAttributes()
 data class PlayerAttributes(val name: String, val titleId: String, override val shardId: String) : PubgAttributes()
 
 data class TelemetryAttributes(val name: String, val description: String, val createdAt: LocalDateTime, val URL: String, override val shardId: String="none") : PubgAttributes()
+
+data class SeasonAttributes(val isCurrentSeason: Boolean, val isOffseason: Boolean, override val shardId: String? = null) : PubgAttributes()
 
 data class MatchAttributes(
     val createdAt: OffsetDateTime,
@@ -37,6 +39,7 @@ class PubgAttributeDeserializer : StdDeserializer<PubgAttributes>(PubgAttributes
 
     override fun deserialize(p: JsonParser?, ctxt: DeserializationContext?): PubgAttributes {
         val tree = p!!.codec.readTree<JsonNode>(p)
+        if(tree.has("isCurrentSeason")) return p.codec.treeToValue(tree, SeasonAttributes::class.java)
         if(tree.has("URL")) return p.codec.treeToValue(tree, TelemetryAttributes::class.java)
         if(tree.has("name")) return p.codec.treeToValue(tree, PlayerAttributes::class.java)
         if(tree.has("mapName")) return p.codec.treeToValue(tree, MatchAttributes::class.java)

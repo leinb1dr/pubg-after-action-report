@@ -30,4 +30,15 @@ class PubgResponseDeserializerTest(@Autowired val om: ObjectMapper) {
         Assertions.assertEquals("player", readValue.data!![0].type)
         Assertions.assertEquals("stealthg0d", (readValue.data!![0].attributes as PlayerAttributes).name)
     }
+
+    @Test
+    fun deserializeGetSeasonsTest() {
+        val readValue = om.readValue(
+            ClassLoader.getSystemResource("GetSeasons.json").readText(),
+            PubgWrapper::class.java
+        )
+
+        Assertions.assertEquals("season", readValue.data!![0].type)
+        Assertions.assertFalse((readValue.data!![0].attributes as SeasonAttributes).isOffseason)
+    }
 }

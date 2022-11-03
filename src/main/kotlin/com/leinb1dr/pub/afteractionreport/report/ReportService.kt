@@ -42,7 +42,7 @@ class ReportService(
                 val playerMatch = it.t2.copy(latestMatchId = match.id)
                 userMatchRepository.save(playerMatch)
                     .map { match }
-                    .flatMap { matchService.getMatch(it.id) }
+                    .flatMap { pubgData -> matchService.getMatch(pubgData.id) }
                     .participantSearch(it.t2.pubgId)
             }
             .filter { it.second.stats.winPlace <= 10 }

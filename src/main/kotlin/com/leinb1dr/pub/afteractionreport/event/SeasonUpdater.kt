@@ -2,17 +2,16 @@
 
 package com.leinb1dr.pub.afteractionreport.event
 
-import com.leinb1dr.pub.afteractionreport.report.ReportEngine
+import com.leinb1dr.pub.afteractionreport.seasons.CurrentSeasonService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Sinks
-import java.util.concurrent.TimeUnit
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 
 @Service
-class UpdateChecker(@Autowired private val engine: ReportEngine) {
+class SeasonUpdater(@Autowired private val currentSeasonService: CurrentSeasonService) {
 
     private val sink = Sinks.many().replay().latest<Long?>()
 
@@ -21,12 +20,12 @@ class UpdateChecker(@Autowired private val engine: ReportEngine) {
         val test = sink.asFlux()
             .publish()
         test
-            .flatMap { engine.checkForReports(it) }
+            .flatMap { currentSeasonService.updateSeason() }
             .subscribe(System.out::println)
         test.connect()
     }
 
-    @Scheduled(fixedRate = 5, timeUnit = TimeUnit.MINUTES)
+    @Scheduled(cron = "00 08 * * 3")
     fun scheduleFixedRateTask() {
         sink.tryEmitNext(System.currentTimeMillis())
     }

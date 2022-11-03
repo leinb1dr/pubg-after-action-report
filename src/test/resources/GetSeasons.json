@@ -1,0 +1,12 @@
+{
+  "data": [
+    {
+      "type": "season",
+      "id": "division.bro.official.2017-beta",
+      "attributes": {
+        "isCurrentSeason": false,
+        "isOffseason": false
+      }
+    }
+  ]
+}
