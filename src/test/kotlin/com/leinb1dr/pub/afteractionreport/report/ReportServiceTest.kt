@@ -63,13 +63,13 @@ class ReportServiceTest {
                     attributes = ParticipantAttributes(
                         stats = ParticipantStats(
                             0,
-                            1,
                             32.489502,
                             1,
                             "byplayer",
                             0,
                             1,
                             30,
+                            1,
                             1,
                             1,
                             2.8585966,

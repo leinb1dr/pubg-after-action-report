@@ -1,0 +1,418 @@
+{
+  "data": {
+    "type": "playerSeason",
+    "attributes": {
+      "bestRankPoint": 0,
+      "gameModeStats": {
+        "duo": {
+          "assists": 0,
+          "boosts": 0,
+          "dBNOs": 0,
+          "dailyKills": 0,
+          "dailyWins": 0,
+          "damageDealt": 0,
+          "days": 0,
+          "headshotKills": 0,
+          "heals": 0,
+          "killPoints": 0,
+          "kills": 0,
+          "longestKill": 0,
+          "longestTimeSurvived": 0,
+          "losses": 0,
+          "maxKillStreaks": 0,
+          "mostSurvivalTime": 0,
+          "rankPoints": 0,
+          "rankPointsTitle": "",
+          "revives": 0,
+          "rideDistance": 0,
+          "roadKills": 0,
+          "roundMostKills": 0,
+          "roundsPlayed": 0,
+          "suicides": 0,
+          "swimDistance": 0,
+          "teamKills": 0,
+          "timeSurvived": 0,
+          "top10s": 0,
+          "vehicleDestroys": 0,
+          "walkDistance": 0,
+          "weaponsAcquired": 0,
+          "weeklyKills": 0,
+          "weeklyWins": 0,
+          "winPoints": 0,
+          "wins": 0
+        },
+        "duo-fpp": {
+          "assists": 29,
+          "boosts": 149,
+          "dBNOs": 31,
+          "dailyKills": 5,
+          "dailyWins": 0,
+          "damageDealt": 9044.317,
+          "days": 11,
+          "headshotKills": 15,
+          "heals": 159,
+          "killPoints": 0,
+          "kills": 53,
+          "longestKill": 722.4867,
+          "longestTimeSurvived": 1966,
+          "losses": 47,
+          "maxKillStreaks": 2,
+          "mostSurvivalTime": 1966,
+          "rankPoints": 0,
+          "rankPointsTitle": "",
+          "revives": 19,
+          "rideDistance": 87313.945,
+          "roadKills": 0,
+          "roundMostKills": 5,
+          "roundsPlayed": 52,
+          "suicides": 1,
+          "swimDistance": 43.60084,
+          "teamKills": 0,
+          "timeSurvived": 47868,
+          "top10s": 24,
+          "vehicleDestroys": 1,
+          "walkDistance": 57349.305,
+          "weaponsAcquired": 264,
+          "weeklyKills": 15,
+          "weeklyWins": 1,
+          "winPoints": 0,
+          "wins": 5
+        },
+        "solo": {
+          "assists": 0,
+          "boosts": 0,
+          "dBNOs": 0,
+          "dailyKills": 0,
+          "dailyWins": 0,
+          "damageDealt": 0,
+          "days": 0,
+          "headshotKills": 0,
+          "heals": 0,
+          "killPoints": 0,
+          "kills": 0,
+          "longestKill": 0,
+          "longestTimeSurvived": 0,
+          "losses": 0,
+          "maxKillStreaks": 0,
+          "mostSurvivalTime": 0,
+          "rankPoints": 0,
+          "rankPointsTitle": "",
+          "revives": 0,
+          "rideDistance": 0,
+          "roadKills": 0,
+          "roundMostKills": 0,
+          "roundsPlayed": 0,
+          "suicides": 0,
+          "swimDistance": 0,
+          "teamKills": 0,
+          "timeSurvived": 0,
+          "top10s": 0,
+          "vehicleDestroys": 0,
+          "walkDistance": 0,
+          "weaponsAcquired": 0,
+          "weeklyKills": 0,
+          "weeklyWins": 0,
+          "winPoints": 0,
+          "wins": 0
+        },
+        "solo-fpp": {
+          "assists": 0,
+          "boosts": 0,
+          "dBNOs": 0,
+          "dailyKills": 0,
+          "dailyWins": 0,
+          "damageDealt": 0,
+          "days": 0,
+          "headshotKills": 0,
+          "heals": 0,
+          "killPoints": 0,
+          "kills": 0,
+          "longestKill": 0,
+          "longestTimeSurvived": 0,
+          "losses": 0,
+          "maxKillStreaks": 0,
+          "mostSurvivalTime": 0,
+          "rankPoints": 0,
+          "rankPointsTitle": "",
+          "revives": 0,
+          "rideDistance": 0,
+          "roadKills": 0,
+          "roundMostKills": 0,
+          "roundsPlayed": 0,
+          "suicides": 0,
+          "swimDistance": 0,
+          "teamKills": 0,
+          "timeSurvived": 0,
+          "top10s": 0,
+          "vehicleDestroys": 0,
+          "walkDistance": 0,
+          "weaponsAcquired": 0,
+          "weeklyKills": 0,
+          "weeklyWins": 0,
+          "winPoints": 0,
+          "wins": 0
+        },
+        "squad": {
+          "assists": 0,
+          "boosts": 0,
+          "dBNOs": 0,
+          "dailyKills": 0,
+          "dailyWins": 0,
+          "damageDealt": 0,
+          "days": 0,
+          "headshotKills": 0,
+          "heals": 0,
+          "killPoints": 0,
+          "kills": 0,
+          "longestKill": 0,
+          "longestTimeSurvived": 0,
+          "losses": 0,
+          "maxKillStreaks": 0,
+          "mostSurvivalTime": 0,
+          "rankPoints": 0,
+          "rankPointsTitle": "",
+          "revives": 0,
+          "rideDistance": 0,
+          "roadKills": 0,
+          "roundMostKills": 0,
+          "roundsPlayed": 0,
+          "suicides": 0,
+          "swimDistance": 0,
+          "teamKills": 0,
+          "timeSurvived": 0,
+          "top10s": 0,
+          "vehicleDestroys": 0,
+          "walkDistance": 0,
+          "weaponsAcquired": 0,
+          "weeklyKills": 0,
+          "weeklyWins": 0,
+          "winPoints": 0,
+          "wins": 0
+        },
+        "squad-fpp": {
+          "assists": 14,
+          "boosts": 96,
+          "dBNOs": 32,
+          "dailyKills": 0,
+          "dailyWins": 0,
+          "damageDealt": 4731.944,
+          "days": 6,
+          "headshotKills": 9,
+          "heals": 72,
+          "killPoints": 0,
+          "kills": 29,
+          "longestKill": 347.9713,
+          "longestTimeSurvived": 1823,
+          "losses": 26,
+          "maxKillStreaks": 3,
+          "mostSurvivalTime": 1823,
+          "rankPoints": 0,
+          "rankPointsTitle": "",
+          "revives": 14,
+          "rideDistance": 34963.31,
+          "roadKills": 0,
+          "roundMostKills": 5,
+          "roundsPlayed": 31,
+          "suicides": 1,
+          "swimDistance": 4.838267,
+          "teamKills": 0,
+          "timeSurvived": 28728,
+          "top10s": 20,
+          "vehicleDestroys": 2,
+          "walkDistance": 34070.42,
+          "weaponsAcquired": 171,
+          "weeklyKills": 11,
+          "weeklyWins": 1,
+          "winPoints": 0,
+          "wins": 5
+        }
+      }
+    },
+    "relationships": {
+      "season": {
+        "data": {
+          "type": "season",
+          "id": "division.bro.official.pc-2018-20"
+        }
+      },
+      "player": {
+        "data": {
+          "type": "player",
+          "id": "account.0bee6c2ee01d44299425625bcb9e7ddb"
+        }
+      },
+      "matchesSolo": {
+        "data": []
+      },
+      "matchesSoloFPP": {
+        "data": []
+      },
+      "matchesDuo": {
+        "data": []
+      },
+      "matchesDuoFPP": {
+        "data": [
+          {
+            "type": "match",
+            "id": "9230f09f-80c2-4e75-9038-67ebef837c61"
+          },
+          {
+            "type": "match",
+            "id": "75ffd186-b6aa-4afb-a643-62f5fec73bc0"
+          },
+          {
+            "type": "match",
+            "id": "681d2822-e5ab-4580-9627-29607f089beb"
+          },
+          {
+            "type": "match",
+            "id": "0be96ee4-0166-4117-be34-7beac41e65ca"
+          },
+          {
+            "type": "match",
+            "id": "c3aef8c6-1c08-4d58-bac8-228a918ad259"
+          },
+          {
+            "type": "match",
+            "id": "de7eab0b-3521-4cef-91f4-290c8b7e4e8d"
+          },
+          {
+            "type": "match",
+            "id": "34b469d9-d2f3-41db-82c0-13dacf52e31d"
+          },
+          {
+            "type": "match",
+            "id": "c2405f44-a59e-4b84-8ad0-0e7b50fdbee1"
+          },
+          {
+            "type": "match",
+            "id": "bdb08f90-1760-4f84-b6cd-63f891e37e9b"
+          },
+          {
+            "type": "match",
+            "id": "a437726e-ca7c-44dc-a5f4-d0aa2556e740"
+          },
+          {
+            "type": "match",
+            "id": "2232779e-e866-4d82-a27c-782a682bef67"
+          },
+          {
+            "type": "match",
+            "id": "0ada9018-c743-4467-9ba2-c1d3fc30a623"
+          },
+          {
+            "type": "match",
+            "id": "63636656-169c-4f4f-9aa4-8968d40802ec"
+          },
+          {
+            "type": "match",
+            "id": "6e59d317-50a8-4ed8-bbf1-57309c93c2a0"
+          },
+          {
+            "type": "match",
+            "id": "f708827c-ae1e-449c-8424-65fe6aede993"
+          },
+          {
+            "type": "match",
+            "id": "bdb58802-3464-48c8-842c-1a6b4eef555b"
+          },
+          {
+            "type": "match",
+            "id": "b758f2ef-153d-4e8d-a8bf-b6c8d90e38bc"
+          }
+        ]
+      },
+      "matchesSquad": {
+        "data": []
+      },
+      "matchesSquadFPP": {
+        "data": [
+          {
+            "type": "match",
+            "id": "14349cfd-9dcb-43c9-aeb7-bfdf705376dc"
+          },
+          {
+            "type": "match",
+            "id": "c127d858-834f-449e-82be-63924d2c4908"
+          },
+          {
+            "type": "match",
+            "id": "7b7423c9-8e3f-4ed9-9b31-abcaa180c92b"
+          },
+          {
+            "type": "match",
+            "id": "8c3e0938-bc23-48a7-a670-540a09a2c9c6"
+          },
+          {
+            "type": "match",
+            "id": "9847d450-74ff-4951-b02c-8d9592623b04"
+          },
+          {
+            "type": "match",
+            "id": "2075e3f1-019c-4004-bb2a-ed9610a51d97"
+          },
+          {
+            "type": "match",
+            "id": "8843014f-451f-4708-b94f-b63b31cce3ff"
+          },
+          {
+            "type": "match",
+            "id": "4cb8c643-22db-4716-acc8-c47fe0873425"
+          },
+          {
+            "type": "match",
+            "id": "348fa449-9603-4a4c-bb22-6e6ec710db37"
+          },
+          {
+            "type": "match",
+            "id": "1e852c4c-27f1-4841-9edd-bd7e102cc698"
+          },
+          {
+            "type": "match",
+            "id": "385a619b-655d-45bf-915b-66c415fcf5f0"
+          },
+          {
+            "type": "match",
+            "id": "7dded029-07c0-48ce-9012-df262afd6d75"
+          },
+          {
+            "type": "match",
+            "id": "6f4095c9-a473-4fbf-b7a0-b09d84a7e6c8"
+          },
+          {
+            "type": "match",
+            "id": "eef77c02-cd25-422a-841b-3610f7f7a624"
+          },
+          {
+            "type": "match",
+            "id": "7af95675-90bc-4180-9dfa-8215fd3e06c4"
+          },
+          {
+            "type": "match",
+            "id": "18c18c2b-4a46-4ea3-b1a0-a22c14d73b55"
+          },
+          {
+            "type": "match",
+            "id": "39974519-0abb-4e42-aa2d-f2792bc77842"
+          },
+          {
+            "type": "match",
+            "id": "93fa4d05-4e91-4a33-a9d6-55dc24813605"
+          },
+          {
+            "type": "match",
+            "id": "ed85ecf7-bf59-4ddb-946b-6da6e86585cf"
+          },
+          {
+            "type": "match",
+            "id": "eed6f35b-4e07-479f-bcb6-2bb7b57982d6"
+          }
+        ]
+      }
+    }
+  },
+  "links": {
+    "self": "https://api.pubg.com/shards/steam/players/account.0bee6c2ee01d44299425625bcb9e7ddb/seasons/division.bro.official.pc-2018-20"
+  },
+  "meta": {}
+}

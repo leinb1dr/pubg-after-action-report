@@ -39,4 +39,13 @@ class PlayerService(@Autowired @Qualifier("pubgClient") private val client: WebC
             .onErrorResume { Mono.empty() }
     }
 
+    fun getPlayerSeasonStats(pubgId: String, seasonId: String): Mono<PubgWrapper> {
+        return client.get().uri("/players/{pubgId}/seasons/{seasonId}", pubgId, seasonId)
+            .retrieve()
+            .toEntity<PubgWrapper>()
+            .map { it.body ?: throw Exception("No season stats missing: $seasonId") }
+            .doOnError { t -> logger.error("Unable to get season stats for user", t) }
+            .onErrorResume { Mono.empty() }
+    }
+
 }

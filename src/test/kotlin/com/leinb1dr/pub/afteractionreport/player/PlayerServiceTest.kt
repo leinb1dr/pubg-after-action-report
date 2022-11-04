@@ -37,10 +37,23 @@ class PlayerServiceTest(@Autowired private val ps: PlayerService) {
     }
 
     @Test
-    fun getListOfPlayersById(){
-        val pubgResults:PubgWrapper = runBlocking { ps.findPlayersByIds(arrayListOf("account.0bee6c2ee01d44299425625bcb9e7ddb")).awaitSingle() }
+    fun getListOfPlayersById() {
+        val pubgResults: PubgWrapper =
+            runBlocking { ps.findPlayersByIds(arrayListOf("account.0bee6c2ee01d44299425625bcb9e7ddb")).awaitSingle() }
 
         assertEquals(1, pubgResults.data!!.size)
         assertEquals("account.0bee6c2ee01d44299425625bcb9e7ddb", pubgResults.data!![0].id)
+    }
+
+    @Test
+    fun `Get Season Stats for Player`() {
+        val pubgResults: PubgWrapper = runBlocking {
+            ps.getPlayerSeasonStats(
+                "account.0bee6c2ee01d44299425625bcb9e7ddb",
+                "division.bro.official.pc-2018-20"
+            ).awaitSingle()
+        }
+
+        assertEquals("playerSeason", pubgResults.data!![0].type)
     }
 }
