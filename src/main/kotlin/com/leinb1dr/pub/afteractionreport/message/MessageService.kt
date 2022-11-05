@@ -2,6 +2,7 @@ package com.leinb1dr.pub.afteractionreport.message
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.leinb1dr.pub.afteractionreport.report.Report
+import com.leinb1dr.pub.afteractionreport.report.ReportAnnotation
 import com.leinb1dr.pub.afteractionreport.report.ReportFields
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -43,15 +44,18 @@ class MessageService(
     fun postMessage(stats: Report): Mono<Boolean> {
 
         val fields = mutableListOf<MutableMap<String, Any?>>()
-
-        for (property in ReportFields::class.memberProperties) {
-            fields.add(
-                mutableMapOf(
-                    Pair("name", labels[property.name]),
-                    Pair("value", "${property.get(stats.fields)}"),
-                    Pair("inline", "true")
+        val reportFieldProperties = ReportFields::class.memberProperties
+        for (property in reportFieldProperties) {
+            if(!property.name.endsWith("Annotation")) {
+                val annotation = reportFieldProperties.filter { it.name == "${property.name}Annotation" }.firstOrNull()
+                fields.add(
+                    mutableMapOf(
+                        Pair("name", labels[property.name]),
+                        Pair("value", "${property.get(stats.fields)} ${(annotation?.get(stats.fields)?.let { (it as ReportAnnotation).emoji } )}"),
+                        Pair("inline", "true")
+                    )
                 )
-            )
+            }
         }
 
         fields.sortWith { o1, o2 -> order.indexOf(o1["name"]).compareTo(order.indexOf(o2["name"])) }

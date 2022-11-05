@@ -3,6 +3,7 @@ package com.leinb1dr.pub.afteractionreport.report
 import com.leinb1dr.pub.afteractionreport.core.MatchAttributes
 import com.leinb1dr.pub.afteractionreport.core.ParticipantAttributes
 import com.leinb1dr.pub.afteractionreport.core.PubgWrapper
+import com.leinb1dr.pub.afteractionreport.core.SeasonStats
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
@@ -13,23 +14,27 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 
-fun Mono<PubgWrapper>.participantSearch(s: String): Mono<Pair<PubgWrapper, ParticipantAttributes>> =
+fun Mono<PubgWrapper>.participantSearch(
+    s: String,
+    seasonStats: SeasonStats
+): Mono<Triple<PubgWrapper, ParticipantAttributes, SeasonStats>> =
     this.flatMapMany { match: PubgWrapper ->
         Flux.fromArray(match.included!!)
             .filter { it.type == "participant" }
             .map { it.attributes as ParticipantAttributes }
             .filter { it.stats.playerId == s }
-            .map { Pair(match, it) }
+            .map { Triple(match, it, seasonStats) }
     }
         .toMono()
 
-fun Flux<Pair<PubgWrapper, ParticipantAttributes>>.formatReport(): Flux<Report> =
+fun Flux<Triple<PubgWrapper, ParticipantAttributes, SeasonStats>>.formatReport(): Flux<Report> =
     this.map {
         val stats = it.second.stats
         val fields = ReportFields(
             stats.DBNOs,
             stats.assists,
             BigDecimal.valueOf(stats.damageDealt).setScale(2, RoundingMode.HALF_EVEN).toDouble(),
+            if(it.third.damageDealt==0.0) ReportAnnotation.NONE else if ((it.third.damageDealt / it.third.roundsPlayed) >= stats.damageDealt) ReportAnnotation.ABOVE else ReportAnnotation.BELOW,
             stats.deathType,
             stats.headshotKills,
             stats.name,

@@ -6,11 +6,16 @@ data class Report(
     val fields: ReportFields
 )
 
+enum class ReportAnnotation(val emoji: String){
+    ABOVE(":chicken:"), EVEN(":heavy_equals_sign:"), BELOW(":potato:"), NONE("")
+}
+
 data class ReportFields(
 
     val DBNOs: Int,
     val assists: Int,
     val damageDealt: Double,
+    val damageDealtAnnotation: ReportAnnotation,
     val deathType: String = "none",
     val headshotKills: Int,
     val name: String = "#PlayerUnknown",

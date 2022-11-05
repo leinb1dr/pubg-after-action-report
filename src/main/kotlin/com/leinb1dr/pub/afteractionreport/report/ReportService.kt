@@ -1,8 +1,12 @@
 package com.leinb1dr.pub.afteractionreport.report
 
+import com.leinb1dr.pub.afteractionreport.core.MatchAttributes
+import com.leinb1dr.pub.afteractionreport.core.PlayerSeasonAttributes
 import com.leinb1dr.pub.afteractionreport.core.PubgData
+import com.leinb1dr.pub.afteractionreport.core.SeasonStats
 import com.leinb1dr.pub.afteractionreport.match.MatchService
 import com.leinb1dr.pub.afteractionreport.player.PlayerService
+import com.leinb1dr.pub.afteractionreport.seasons.SeasonService
 import com.leinb1dr.pub.afteractionreport.usermatch.UserMatch
 import com.leinb1dr.pub.afteractionreport.usermatch.UserMatchRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,7 +19,8 @@ import reactor.util.function.Tuple2
 class ReportService(
     @Autowired val playerService: PlayerService,
     @Autowired val userMatchRepository: UserMatchRepository,
-    @Autowired val matchService: MatchService
+    @Autowired val matchService: MatchService,
+    @Autowired val seasonService: SeasonService
 ) {
 
     fun getLatestReport(pubgIds: List<String>): Flux<Report> {
@@ -24,26 +29,43 @@ class ReportService(
             .flatMap { playerService.findPlayersByIds(it) }
             .flatMap { Flux.fromArray(it.data!!) }
 
-        return players.flatMap {
-            val data = it.relationships!!["matches"]!!.data
-
-            val latestMatchFromPubg: Mono<PubgData> = if (data != null) Mono.just(data[0]) else Mono.empty()
-
-            val latestMatchFromCache: Mono<UserMatch> =
-                userMatchRepository.findOneByPubgId(it.id).defaultIfEmpty(UserMatch(pubgId = it.id, latestMatchId = ""))
-
-            Flux.zip(latestMatchFromPubg, latestMatchFromCache)
-        }.flatMap {
-            if (it.t1.id != it.t2.latestMatchId) return@flatMap Mono.just(it)
-            return@flatMap Mono.empty<Tuple2<PubgData, UserMatch>>()
-        }
+        return players
             .flatMap {
-                val match = it.t1
-                val playerMatch = it.t2.copy(latestMatchId = match.id)
+                val data = it.relationships!!["matches"]!!.data
+
+                val latestMatchFromPubg: Mono<PubgData> = if (data != null) Mono.just(data[0]) else Mono.empty()
+
+                val latestMatchFromCache: Mono<UserMatch> =
+                    userMatchRepository.findOneByPubgId(it.id)
+                        .defaultIfEmpty(UserMatch(pubgId = it.id, latestMatchId = ""))
+
+                Flux.zip(latestMatchFromPubg, latestMatchFromCache)
+            }
+            .flatMap {
+                if (it.t1.id != it.t2.latestMatchId) return@flatMap Mono.just(it)
+                return@flatMap Mono.empty<Tuple2<PubgData, UserMatch>>()
+            }
+            .flatMap { playerMatchTuple ->
+                seasonService.getCurrentSeason()
+                    .defaultIfEmpty(PubgData())
+                    .flatMap {
+                        if (it.id.isNotEmpty())
+                            playerService.getPlayerSeasonStats(playerMatchTuple.t2.pubgId, it.id)
+                                .map { playerSeasonStatsWrapper ->
+                                    (playerSeasonStatsWrapper.data!![0].attributes as PlayerSeasonAttributes).gameModeStats[(playerMatchTuple.t1.attributes as MatchAttributes).gameMode]!!
+                                }
+                        else Mono.just(SeasonStats.empty())
+                    }.map { Triple(playerMatchTuple.t1, playerMatchTuple.t2, it) }
+
+
+            }
+            .flatMap {
+                val match = it.first
+                val playerMatch = it.second.copy(latestMatchId = match.id)
                 userMatchRepository.save(playerMatch)
                     .map { match }
                     .flatMap { pubgData -> matchService.getMatch(pubgData.id) }
-                    .participantSearch(it.t2.pubgId)
+                    .participantSearch(it.second.pubgId, it.third)
             }
             .filter { it.second.stats.winPlace <= 10 }
             .formatReport()

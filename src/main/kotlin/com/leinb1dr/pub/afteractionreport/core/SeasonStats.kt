@@ -1,6 +1,6 @@
 package com.leinb1dr.pub.afteractionreport.core
 
-data class GameModeStats(
+data class SeasonStats(
     override val assists: Int,
     override val boosts: Int,
     override val DBNOs: Int,
@@ -36,4 +36,44 @@ data class GameModeStats(
     val weeklyWins: Int,
     val winPoints: Double,
     val wins: Int
-): AbstractStats()
+): AbstractStats(){
+    companion object Default{
+        fun empty() = SeasonStats(
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.0,
+            0,
+            0,
+            0,
+            0.0,
+            0,
+            0.0,
+            0.0,
+            0,
+            0,
+            0,
+            0.0,
+            "",
+            0,
+            0.0,
+            0,
+            0,
+            1,
+            0,
+            0.0,
+            0,
+            0,
+            0,
+            0,
+            0.0,
+            0,
+            0,
+            0,
+            0.0,
+            0
+        )
+    }
+}

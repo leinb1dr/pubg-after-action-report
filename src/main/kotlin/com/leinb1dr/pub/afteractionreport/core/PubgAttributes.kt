@@ -12,7 +12,7 @@ enum class GameMode(val label: String) {
     SOLO("solo"), SOLO_FPP("solo-fpp"), DUO("duo"), DUO_FPP("duo-fpp"), SQUAD("squad"), SQUAD_FPP("squad-fpp"), NONE("none");
 
     companion object {
-        @JsonCreator
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
         @JvmStatic
         fun fromLabel(label: String): GameMode =
             values().firstOrNull { it.label == label } ?: NONE
@@ -42,14 +42,14 @@ data class SeasonAttributes(
 ) : PubgAttributes()
 
 data class PlayerSeasonAttributes(
-    val gameModeStats: Map<GameMode, GameModeStats>,
+    val gameModeStats: Map<GameMode, SeasonStats>,
     override val shardId: String? = null
 ) : PubgAttributes()
 
 data class MatchAttributes(
     val createdAt: OffsetDateTime,
     val duration: Int,
-    val gameMode: String,
+    val gameMode: GameMode,
     val mapName: String,
     val isCustomMatch: Boolean,
     val matchType: String,
