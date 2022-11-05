@@ -9,8 +9,12 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Import
+import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest
+@ActiveProfiles("test")
+@Import(com.leinb1dr.pub.afteractionreport.config.TestConfiguration::class)
 class MessageServiceTest(@Autowired private val ms: MessageService) {
 
     @Test
