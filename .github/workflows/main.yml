@@ -21,7 +21,7 @@ jobs:
         uses: gradle/gradle-build-action@v2.3.3
         env: # Or as an environment variable
           APP_PUBGTOKEN: ${{ secrets.APP_PUBGTOKEN }}
-          APP_DISCORDWEBHOOK: ${{ secrets.APP_PUBGTOKEN }}
+          APP_DISCORDWEBHOOK: ${{ secrets.APP_DISCORDWEBHOOK }}
           SPRING_PROFILES_ACTIVE: test
         with:
           arguments: build --debug
