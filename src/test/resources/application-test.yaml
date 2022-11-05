@@ -12,3 +12,5 @@ logging:
     org:
       springframework: DEBUG
     reactor: WARN
+    com:
+      leinb1dr: DEBUG
