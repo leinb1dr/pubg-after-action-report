@@ -24,4 +24,4 @@ jobs:
           APP_DISCORDWEBHOOK: ${{ secrets.APP_PUBGTOKEN }}
           SPRING_PROFILES_ACTIVE: test
         with:
-          arguments: build
+          arguments: build --debug
