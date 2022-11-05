@@ -5,8 +5,10 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Import
 
 @SpringBootTest
+@Import(com.leinb1dr.pub.afteractionreport.config.TestConfiguration::class)
 class PubgResponseDeserializerTest(@Autowired val om: ObjectMapper) {
 
     @Test
