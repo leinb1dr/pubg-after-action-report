@@ -21,7 +21,7 @@ class ParticipantSearchTest(@Autowired private val ms: MatchService) {
     @Test
     fun createReportTest(){
         val report = runBlocking {
-            ms.getMatch("a0c5d5fa-1fb0-41c0-989f-e52caf06a56d")
+            ms.getMatch("bb70dbd7-631d-4d95-8e9e-fc5c2fdcf55a")
                 .participantSearch("account.0bee6c2ee01d44299425625bcb9e7ddb", mockkClass(SeasonStats::class))
                 .awaitSingle()
         }
