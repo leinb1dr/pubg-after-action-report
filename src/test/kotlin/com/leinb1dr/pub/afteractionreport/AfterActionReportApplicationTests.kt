@@ -12,13 +12,4 @@ import org.springframework.test.context.ActiveProfiles
 @ActiveProfiles("test")
 @Import(com.leinb1dr.pub.afteractionreport.config.TestConfiguration::class)
 class AfterActionReportApplicationTests(@Autowired val appProperties: AppProperties) {
-
-	private val logger = LoggerFactory.getLogger(AfterActionReportApplicationTests::class.java)
-
-	@Test
-	fun contextLoads() {
-		logger.info("CHECKHERE " + appProperties.pubgToken)
-		logger.info("CHECKHERE " + appProperties.discordWebHook)
-	}
-
 }
