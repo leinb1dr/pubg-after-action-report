@@ -51,7 +51,7 @@ class MessageService(
                 fields.add(
                     mutableMapOf(
                         Pair("name", labels[property.name]),
-                        Pair("value", "${property.get(stats.fields)} ${(annotation?.get(stats.fields)?.let { (it as ReportAnnotation).emoji } )}"),
+                        Pair("value", "${property.get(stats.fields)} ${(annotation?.get(stats.fields)?.let { (it as ReportAnnotation).emoji } ?: "")}"),
                         Pair("inline", "true")
                     )
                 )
