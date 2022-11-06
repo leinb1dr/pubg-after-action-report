@@ -27,7 +27,7 @@ jobs:
           APP_DISCORDWEBHOOK: ${{ secrets.APP_DISCORDWEBHOOK }}
           SPRING_PROFILES_ACTIVE: test
         with:
-          arguments: build --debug
+          arguments: build
       # Set up docker environment
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
