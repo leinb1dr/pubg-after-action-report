@@ -13,6 +13,8 @@ spec:
     metadata:
       labels:
         app: {{ include "aar.fullname" . }}
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
     spec:
       containers:
         - name: {{ include "aar.fullname" . }}
