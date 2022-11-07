@@ -31,13 +31,13 @@ spec:
             periodSeconds: 15
           resources:
             limits:
-              cpu: 500m
-              ephemeral-storage: 1Gi
-              memory: 1Gi
+              cpu: 250m
+              ephemeral-storage: 10Mi
+              memory: 512Mi
             requests:
-              cpu: 100m
-              ephemeral-storage: 1Ki
-              memory: 500Mi
+              cpu: 250m
+              ephemeral-storage: 10Mi
+              memory: 512Mi
           volumeMounts:
             - name: serviceaccount-secret
               mountPath: /var/secrets/google

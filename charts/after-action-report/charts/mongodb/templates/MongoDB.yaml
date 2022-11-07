@@ -38,12 +38,14 @@ spec:
                   key: MONGO_ROOT_PASSWORD
                   optional: false
           resources:
-            requests:
-              memory: "500Mi"
-              cpu: "50m"
             limits:
-              memory: "1Gi"
-              cpu: "100m"
+              cpu: 250m
+              ephemeral-storage: 1Gi
+              memory: 512Mi
+            requests:
+              cpu: 250m
+              ephemeral-storage: 1Gi
+              memory: 512Mi
   volumeClaimTemplates:
     - metadata:
         name: {{ include "mongo.fullname" . }}-data
