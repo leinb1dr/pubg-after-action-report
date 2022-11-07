@@ -44,7 +44,7 @@ jobs:
           push: true
           tags: leinb1dr/after-action-report:latest
       - name: Tag for deploy
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/main'
         run: |
           git tag -l "poc"
           git push origin --tags
