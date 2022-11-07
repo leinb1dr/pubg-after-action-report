@@ -20,8 +20,8 @@ data class ReportFields(
     val headshotKills: Int,
     val name: String = "#PlayerUnknown",
     val kills: Int,
-    val winPlace: Int
-//    val heals: Int,
+    val winPlace: Int,
+    val heals: Int,
 //    val killPlace: Int,
 //    val killStreaks: Int,
 //    val longestKill: Double,

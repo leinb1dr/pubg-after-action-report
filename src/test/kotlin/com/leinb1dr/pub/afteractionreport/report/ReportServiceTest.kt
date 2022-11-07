@@ -106,6 +106,7 @@ class ReportServiceTest {
         every { ms.getMatch("2a12fa80-b3a1-48d1-9b75-1a9fd1565ead") } returns Mono.just(matchWrapper)
         val seasonStats = mockkClass(SeasonStats::class)
         every { seasonStats.damageDealt } returns 0.0
+        every { seasonStats.heals } returns 0
         every { ps.getPlayerSeasonStats(pubgId, seasonId) } returns Mono.just(
             PubgWrapper(
                 data = arrayOf(

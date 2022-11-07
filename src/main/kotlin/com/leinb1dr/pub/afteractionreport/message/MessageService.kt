@@ -19,7 +19,7 @@ class MessageService(
 ) {
     private val logger = LoggerFactory.getLogger(MessageService::class.java)
 
-    val labels: Map<String, String> = mapOf(
+    private final val labels: Map<String, String> = mapOf(
         Pair("name", "Name"),
         Pair("deathType", "Death"),
         Pair("winPlace", "Place"),
@@ -27,34 +27,29 @@ class MessageService(
         Pair("headshotKills", "Headshot Kills"),
         Pair("assists", "Assists"),
         Pair("DBNOs", "Knocks"),
-        Pair("damageDealt", "Damage Dealt")
+        Pair("damageDealt", "Damage Dealt"),
+        Pair("heals", "Heals Used")
     )
 
-    val order: Array<String> = arrayOf(
-        "Name",
-        "Death",
-        "Place",
-        "Kills",
-        "Headshot Kills",
-        "Assists",
-        "Knocks",
-        "Damage Dealt"
-    )
+    val order: List<String> = labels.entries.map { it.value }
 
-    fun postMessage(stats: Report): Mono<Boolean> {
+    fun postMessage(stats: Report): Mono<Map<String, Array<Map<String, Any>>>> {
 
         val fields = mutableListOf<MutableMap<String, Any?>>()
         val reportFieldProperties = ReportFields::class.memberProperties
         for (property in reportFieldProperties) {
             if(!property.name.endsWith("Annotation")) {
-                val annotation = reportFieldProperties.filter { it.name == "${property.name}Annotation" }.firstOrNull()
-                fields.add(
-                    mutableMapOf(
-                        Pair("name", labels[property.name]),
-                        Pair("value", "${property.get(stats.fields)} ${(annotation?.get(stats.fields)?.let { (it as ReportAnnotation).emoji } ?: "")}"),
-                        Pair("inline", "true")
+                val annotation = reportFieldProperties.firstOrNull { it.name == "${property.name}Annotation" }
+                val statName = labels[property.name]
+                val statVal = property.get(stats.fields)
+                if((statVal is Number && statVal.toInt() >= 0) || statVal is String)
+                    fields.add(
+                        mutableMapOf(
+                            Pair("name", statName),
+                            Pair("value", "$statVal ${(annotation?.get(stats.fields)?.let { (it as ReportAnnotation).emoji } ?: "")}".trim()),
+                            Pair("inline", "true")
+                        )
                     )
-                )
             }
         }
 
@@ -76,7 +71,7 @@ class MessageService(
         println(mapper.writeValueAsString(message))
 
         return client.post().bodyValue(message).exchangeToMono {
-            Mono.just(it.statusCode().is2xxSuccessful)
+            Mono.just(message)
                 .doOnError { t -> logger.error("Failed to send message to discord", t) }
                 .onErrorResume { Mono.empty() }
         }

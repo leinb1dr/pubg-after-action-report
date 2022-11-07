@@ -30,21 +30,30 @@ fun Mono<PubgWrapper>.participantSearch(
 fun Flux<Triple<PubgWrapper, ParticipantAttributes, SeasonStats>>.formatReport(): Flux<Report> =
     this.map {
         val stats = it.second.stats
+        val seasonStats = it.third
         val fields = ReportFields(
             stats.DBNOs,
             stats.assists,
             BigDecimal.valueOf(stats.damageDealt).setScale(2, RoundingMode.HALF_EVEN).toDouble(),
-            if(it.third.damageDealt==0.0) ReportAnnotation.NONE else if ((it.third.damageDealt / it.third.roundsPlayed) >= stats.damageDealt) ReportAnnotation.ABOVE else ReportAnnotation.BELOW,
+            if(seasonStats.damageDealt==0.0) ReportAnnotation.NONE else if ((seasonStats.damageDealt / seasonStats.roundsPlayed) >= stats.damageDealt) ReportAnnotation.ABOVE else ReportAnnotation.BELOW,
             stats.deathType,
             stats.headshotKills,
             stats.name,
             stats.kills,
-            stats.winPlace
+            stats.winPlace,
+            isInteresting(stats.heals, seasonStats.heals)
         )
         val matchAttributes = it.first.data!![0].attributes as MatchAttributes
 
         return@map Report(getMapName(matchAttributes.mapName), formatMatchTime(matchAttributes.createdAt), fields)
     }
+
+fun isInteresting(matchStat: Int, seasonStat: Int): Int {
+    val upper = seasonStat * 1.25
+    val lower = seasonStat * .75
+    if(matchStat >= upper || matchStat <= lower) return matchStat
+    return -1
+}
 
 fun formatMatchTime(createdAt: OffsetDateTime): String {
     return createdAt

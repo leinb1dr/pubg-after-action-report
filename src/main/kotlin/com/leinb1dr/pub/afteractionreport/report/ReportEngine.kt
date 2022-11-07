@@ -13,7 +13,7 @@ class ReportEngine(
     @Autowired val messageService: MessageService
 ) {
 
-    fun checkForReports(timeMilli: Long?): Flux<Boolean> {
+    fun checkForReports(timeMilli: Long?): Flux<Map<String, Array<Map<String, Any>>>> {
         return registrationRepository.findAll()
             .log()
             .buffer(10)
