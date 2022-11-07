@@ -48,6 +48,7 @@ jobs:
           tags: leinb1dr/after-action-report:latest
       - name: Tag for deploy
         if: github.ref == 'refs/heads/main'
+        run: |
           # setup the username and email. I tend to use 'GitHub Actions Bot' with no email by default
           gh auth status
           git --version
