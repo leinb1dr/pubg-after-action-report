@@ -43,7 +43,10 @@ jobs:
           context: .
           push: true
           tags: leinb1dr/after-action-report:latest
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.4.1
+      - name: Tag for deploy
+        if: github.ref == 'refs/heads/master'
+        run: |
+          git tag -l "poc"
+          git push origin --tags
         env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
