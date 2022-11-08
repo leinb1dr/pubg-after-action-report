@@ -1,0 +1,27 @@
+package com.leinb1dr.pubg.afteractionreport.core
+
+data class ParticipantStats(
+    override val assists: Int=0,
+    override val damageDealt: Double=0.0,
+    override val DBNOs: Int=0,
+    val deathType: String = "none",
+    override val boosts: Int=0,
+    override val headshotKills: Int=0,
+    override val heals: Int=0,
+    val killPlace: Int=0,
+    override val kills: Int=0,
+    val killStreaks: Int=0,
+    override val longestKill: Double=0.0,
+    val name: String = "#PlayerUnknown",
+    val playerId: String = "#PlayerUnknown",
+    override val revives: Int=0,
+    override val rideDistance: Double=0.0,
+    override val roadKills: Int=0,
+    override val swimDistance: Double=0.0,
+    override val teamKills: Int=0,
+    override val timeSurvived: Int=0,
+    override val vehicleDestroys: Int=0,
+    override val walkDistance: Double=0.0,
+    override val weaponsAcquired: Int=0,
+    val winPlace: Int=0,
+) : AbstractStats()

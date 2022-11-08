@@ -17,6 +17,22 @@ configurations {
 	}
 }
 
+sourceSets {
+	create("intTest") {
+		kotlin {
+			compileClasspath += main.get().output + configurations.testRuntimeClasspath
+			runtimeClasspath += output + compileClasspath
+
+		}
+	}
+}
+
+val intTestImplementation by configurations.getting {
+	extendsFrom(configurations.implementation.get())
+}
+configurations["intTestRuntimeOnly"].extendsFrom(configurations.testImplementation.get())
+configurations["intTestRuntimeOnly"].extendsFrom(configurations.runtimeOnly.get())
+
 repositories {
 	mavenCentral()
 }
@@ -36,7 +52,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-	testImplementation("com.ninja-squad:springmockk:3.0.1")
+	testImplementation("com.ninja-squad:springmockk:3.1.1")
 	testImplementation("org.springframework.boot:spring-boot-starter-test"){
 		exclude(module = "junit")
 		exclude(module = "mockito-core")
@@ -53,4 +69,13 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+task<Test>("intTest") {
+	description = "Runs the integration tests"
+	group = "verification"
+	testClassesDirs = sourceSets["intTest"].output.classesDirs
+	classpath = sourceSets["intTest"].runtimeClasspath
+	useJUnitPlatform()
+	shouldRunAfter("test")
 }
