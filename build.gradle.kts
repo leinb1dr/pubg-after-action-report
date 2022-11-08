@@ -17,6 +17,22 @@ configurations {
 	}
 }
 
+sourceSets {
+	create("intTest") {
+		kotlin {
+			compileClasspath += main.get().output + configurations.testRuntimeClasspath
+			runtimeClasspath += output + compileClasspath
+
+		}
+	}
+}
+
+val intTestImplementation by configurations.getting {
+	extendsFrom(configurations.implementation.get())
+}
+configurations["intTestRuntimeOnly"].extendsFrom(configurations.testImplementation.get())
+configurations["intTestRuntimeOnly"].extendsFrom(configurations.runtimeOnly.get())
+
 repositories {
 	mavenCentral()
 }
@@ -53,4 +69,13 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+task<Test>("intTest") {
+	description = "Runs the integration tests"
+	group = "verification"
+	testClassesDirs = sourceSets["intTest"].output.classesDirs
+	classpath = sourceSets["intTest"].runtimeClasspath
+	useJUnitPlatform()
+	shouldRunAfter("test")
 }
