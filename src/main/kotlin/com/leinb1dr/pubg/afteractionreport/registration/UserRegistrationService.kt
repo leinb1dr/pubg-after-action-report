@@ -1,24 +1,25 @@
 package com.leinb1dr.pubg.afteractionreport.registration
 
-import com.leinb1dr.pubg.afteractionreport.player.PlayerService
-import org.bson.types.ObjectId
+import com.leinb1dr.pubg.afteractionreport.player.PlayerDetailsService
+import com.leinb1dr.pubg.afteractionreport.user.User
+import com.leinb1dr.pubg.afteractionreport.user.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
 @Service
 class UserRegistrationService(
-    @Autowired val playerService: PlayerService,
-    @Autowired val registrationRepository: RegistrationRepository
+    @Autowired val playerDetailsService: PlayerDetailsService,
+    @Autowired val userRepository: UserRepository
 ) {
 
-    fun registerUser(discordId: String, pubgUserName: String): Mono<RegisteredUser> =
-        playerService.findPlayer(pubgUserName)
+    fun registerUser(discordId: String, pubgUserName: String): Mono<User> =
+        playerDetailsService.findPlayer(pubgUserName)
             .map { it.data!![0].id }
-            .map { RegisteredUser(ObjectId.get(), discordId, it) }
-            .flatMap { registrationRepository.insert(it) }
+            .map { User(discordId = discordId, pubgId = it, latestMatchId = "") }
+            .flatMap { userRepository.insert(it) }
 
 
-    fun getRegisteredUser(discordId: String): Mono<RegisteredUser> = registrationRepository.findById(discordId)
+    fun getRegisteredUser(discordId: String): Mono<User> = userRepository.findById(discordId)
 
 }

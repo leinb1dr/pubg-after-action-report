@@ -1,6 +1,6 @@
 package com.leinb1dr.pubg.afteractionreport.config
 
-import com.leinb1dr.pubg.afteractionreport.registration.RegistrationRepository
+import com.leinb1dr.pubg.afteractionreport.user.UserRepository
 import com.leinb1dr.pubg.afteractionreport.seasons.CurrentSeasonRepository
 import com.leinb1dr.pubg.afteractionreport.usermatch.UserMatchRepository
 import com.mongodb.reactivestreams.client.MongoClient
@@ -16,7 +16,7 @@ class TestConfiguration {
     fun currentSeasonRepository() = mockkClass(CurrentSeasonRepository::class)
 
     @Bean
-    fun registrationRepository() = mockkClass(RegistrationRepository::class)
+    fun registrationRepository() = mockkClass(UserRepository::class)
 
     @Bean
     fun userMatchRepository() = mockkClass(UserMatchRepository::class)

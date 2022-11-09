@@ -2,7 +2,9 @@ package com.leinb1dr.pubg.afteractionreport.registration
 
 import com.leinb1dr.pubg.afteractionreport.core.PubgData
 import com.leinb1dr.pubg.afteractionreport.core.PubgWrapper
-import com.leinb1dr.pubg.afteractionreport.player.PlayerService
+import com.leinb1dr.pubg.afteractionreport.player.PlayerDetailsService
+import com.leinb1dr.pubg.afteractionreport.user.User
+import com.leinb1dr.pubg.afteractionreport.user.UserRepository
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
@@ -18,28 +20,29 @@ import reactor.core.publisher.Mono
 class UserRegistrationServiceTest {
 
     @MockK
-    lateinit var registrationRepository: RegistrationRepository
+    lateinit var userRepository: UserRepository
     @MockK
-    lateinit var playerService: PlayerService
-    lateinit var urs:UserRegistrationService
+    lateinit var playerDetailsService: PlayerDetailsService
+    lateinit var urs: UserRegistrationService
 
     @BeforeEach
     fun setup(){
-        urs = UserRegistrationService(playerService, registrationRepository)
+        urs = UserRegistrationService(playerDetailsService, userRepository)
     }
 
     @Test
     fun registerUserTest() {
-        every { registrationRepository.insert(match {
-                it:RegisteredUser -> it.discordId=="358394398511202315" && it.pubgId == "account.0bee6c2ee01d44299425625bcb9e7ddb" } as RegisteredUser)
+        every { userRepository.insert(match {
+                it: User -> it.discordId=="358394398511202315" && it.pubgId == "account.0bee6c2ee01d44299425625bcb9e7ddb" } as User)
         } returns Mono.just(
-                    RegisteredUser(
+                    User(
                         discordId = "358394398511202315",
-                        pubgId = "account.0bee6c2ee01d44299425625bcb9e7ddb"
+                        pubgId = "account.0bee6c2ee01d44299425625bcb9e7ddb",
+                        latestMatchId = ""
                     )
                 )
 
-        every { playerService.findPlayer("stealthg0d") } returns
+        every { playerDetailsService.findPlayer("stealthg0d") } returns
                 Mono.just(
                     PubgWrapper(
                         data = arrayOf(
@@ -52,19 +55,19 @@ class UserRegistrationServiceTest {
                 )
 
 
-        val registeredUser: RegisteredUser =
+        val user: User =
             runBlocking { urs.registerUser("358394398511202315", "stealthg0d").awaitSingle() }
 
-        assertEquals("account.0bee6c2ee01d44299425625bcb9e7ddb", registeredUser.pubgId)
+        assertEquals("account.0bee6c2ee01d44299425625bcb9e7ddb", user.pubgId)
     }
 
     @Test
     fun getRegisteredUserTest() {
-        every { registrationRepository.findById("358394398511202315") } returns Mono.just(RegisteredUser(discordId = "358394398511202315", pubgId = "account.0bee6c2ee01d44299425625bcb9e7ddb"))
+        every { userRepository.findById("358394398511202315") } returns Mono.just(User(discordId = "358394398511202315", pubgId = "account.0bee6c2ee01d44299425625bcb9e7ddb", latestMatchId = ""))
 
 
-        val registeredUser: RegisteredUser = runBlocking { urs.getRegisteredUser("358394398511202315").awaitSingle() }
+        val user: User = runBlocking { urs.getRegisteredUser("358394398511202315").awaitSingle() }
 
-        assertEquals("account.0bee6c2ee01d44299425625bcb9e7ddb", registeredUser.pubgId)
+        assertEquals("account.0bee6c2ee01d44299425625bcb9e7ddb", user.pubgId)
     }
 }

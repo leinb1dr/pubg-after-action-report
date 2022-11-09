@@ -14,7 +14,7 @@ import org.springframework.test.context.ActiveProfiles
 @SpringBootTest
 @ActiveProfiles("test")
 @Import(com.leinb1dr.pubg.afteractionreport.config.TestConfiguration::class)
-class PlayerServiceIntegration(@Autowired private val ps: PlayerService) {
+class PlayerDetailsServiceIntegration(@Autowired private val ps: PlayerDetailsService) {
 
     @Test
     fun findPlayerByNameTest(){
@@ -41,15 +41,6 @@ class PlayerServiceIntegration(@Autowired private val ps: PlayerService) {
     }
 
     @Test
-    fun getListOfPlayersById() {
-        val pubgResults: PubgWrapper =
-            runBlocking { ps.findPlayersByIds(arrayListOf("account.0bee6c2ee01d44299425625bcb9e7ddb")).awaitSingle() }
-
-        assertEquals(1, pubgResults.data!!.size)
-        assertEquals("account.0bee6c2ee01d44299425625bcb9e7ddb", pubgResults.data!![0].id)
-    }
-
-    @Test
     fun `Get Season Stats for Player`() {
         val pubgResults: PubgWrapper = runBlocking {
             ps.getPlayerSeasonStats(
@@ -59,5 +50,14 @@ class PlayerServiceIntegration(@Autowired private val ps: PlayerService) {
         }
 
         assertEquals("playerSeason", pubgResults.data!![0].type)
+    }
+
+    @Test
+    fun `Get new matches for players`() {
+        val playerMatches: List<PlayerMatch> =
+            runBlocking { ps.getLatestPlayerMatches(arrayListOf("account.0bee6c2ee01d44299425625bcb9e7ddb")).collectList().awaitSingle() }
+
+        assertEquals(1, playerMatches.size)
+        assertEquals("account.0bee6c2ee01d44299425625bcb9e7ddb", playerMatches[0].pubgId)
     }
 }

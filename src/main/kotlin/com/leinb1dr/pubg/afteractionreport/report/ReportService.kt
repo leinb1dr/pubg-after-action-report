@@ -5,7 +5,7 @@ import com.leinb1dr.pubg.afteractionreport.core.PlayerSeasonAttributes
 import com.leinb1dr.pubg.afteractionreport.core.PubgData
 import com.leinb1dr.pubg.afteractionreport.core.SeasonStats
 import com.leinb1dr.pubg.afteractionreport.match.MatchService
-import com.leinb1dr.pubg.afteractionreport.player.PlayerService
+import com.leinb1dr.pubg.afteractionreport.player.PlayerDetailsService
 import com.leinb1dr.pubg.afteractionreport.seasons.SeasonService
 import com.leinb1dr.pubg.afteractionreport.usermatch.UserMatch
 import com.leinb1dr.pubg.afteractionreport.usermatch.UserMatchRepository
@@ -17,7 +17,7 @@ import reactor.util.function.Tuple2
 
 @Service
 class ReportService(
-    @Autowired val playerService: PlayerService,
+    @Autowired val playerDetailsService: PlayerDetailsService,
     @Autowired val userMatchRepository: UserMatchRepository,
     @Autowired val matchService: MatchService,
     @Autowired val seasonService: SeasonService
@@ -26,7 +26,7 @@ class ReportService(
     fun getLatestReport(pubgIds: List<String>): Flux<Report> {
         val players = Flux.fromIterable(pubgIds)
             .buffer(10)
-            .flatMap { playerService.findPlayersByIds(it) }
+            .flatMap { playerDetailsService.findPlayersByIds(it) }
             .flatMap { Flux.fromArray(it.data!!) }
 
         return players
@@ -50,7 +50,7 @@ class ReportService(
                     .defaultIfEmpty(PubgData())
                     .flatMap {
                         if (it.id.isNotEmpty())
-                            playerService.getPlayerSeasonStats(playerMatchTuple.t2.pubgId, it.id)
+                            playerDetailsService.getPlayerSeasonStats(playerMatchTuple.t2.pubgId, it.id)
                                 .map { playerSeasonStatsWrapper ->
                                     (playerSeasonStatsWrapper.data!![0].attributes as PlayerSeasonAttributes).gameModeStats[(playerMatchTuple.t1.attributes as MatchAttributes).gameMode]!!
                                 }
