@@ -1,6 +1,7 @@
 package com.leinb1dr.pubg.afteractionreport.match
 
 import com.leinb1dr.pubg.afteractionreport.core.PubgWrapper
+import com.leinb1dr.pubg.afteractionreport.player.PlayerMatch
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -20,6 +21,9 @@ class MatchService(@Autowired @Qualifier("pubgClient") private val client: WebCl
         .map { it.body ?: throw Exception("Player Not Found") }
         .doOnError { t -> logger.error("Failed to get match details", t) }
         .onErrorResume { Mono.empty() }
+
+    fun getMatchDetailsForPlayer(playerMatch: PlayerMatch): Mono<PlayerMatchStats> =
+        getMatch(playerMatch.matchId).map(PlayerMatchStats::create)
 
 
 }

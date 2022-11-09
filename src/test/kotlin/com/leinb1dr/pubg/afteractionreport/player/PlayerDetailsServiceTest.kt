@@ -112,7 +112,7 @@ class PlayerDetailsServiceTest() {
             runBlocking { ps.getLatestPlayerMatches(arrayListOf("account.0bee6c2ee01d44299425625bcb9e7d00")).collectList().awaitSingle() }
 
         assertEquals(1, playerMatches.size)
-        assertEquals("bb70dbd7-631d-4d95-8e9e-fc5c2fdcf500", playerMatches[0].latestMatchId)
+        assertEquals("bb70dbd7-631d-4d95-8e9e-fc5c2fdcf500", playerMatches[0].matchId)
     }
 
     companion object {

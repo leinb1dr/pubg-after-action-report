@@ -1,6 +1,7 @@
 package com.leinb1dr.pubg.afteractionreport.match
 
 import com.leinb1dr.pubg.afteractionreport.core.*
+import com.leinb1dr.pubg.afteractionreport.player.PlayerMatch
 import com.leinb1dr.pubg.afteractionreport.util.SetupWebClientMock
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -25,8 +26,6 @@ class MatchServiceTest {
 
     @InjectMockKs
     lateinit var ms: MatchService
-
-
 
 
     @BeforeEach
@@ -61,6 +60,22 @@ class MatchServiceTest {
         assertEquals("match", pubgResults.data!![0].type)
         assertEquals("bb70dbd7-631d-4d95-8e9e-fc5c2fdcf55a", pubgResults.data!![0].id)
         assertTrue(OffsetDateTime.now().isAfter((pubgResults.data!![0].attributes as MatchAttributes).createdAt))
+    }
+
+
+    @Test
+    fun `Get match details for player`() {
+
+        val playerMatch: PlayerMatch = object : PlayerMatch {
+            override val pubgId: String = "account.0bee6c2ee01d44299425625bcb9e7ddb"
+            override val matchId: String = "bb70dbd7-631d-4d95-8e9e-fc5c2fdcf55a"
+        }
+
+        val matchStats:PlayerMatchStats = runBlocking {
+            ms.getMatchDetailsForPlayer(playerMatch).awaitSingle()
+        }
+
+        assertTrue(OffsetDateTime.now().isAfter(matchStats.attributes.createdAt))
     }
 
     @Test

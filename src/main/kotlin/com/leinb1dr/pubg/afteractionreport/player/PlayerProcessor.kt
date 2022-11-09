@@ -11,11 +11,11 @@ class PlayerProcessor(
 ) {
     fun findAll(): Flux<PlayerMatch> =
         playerMatchService.getProcessedPlayerMatches()
-            .collectMap({ it.pubgId }, { it.latestMatchId })
+            .collectMap({ it.pubgId }, { it.matchId })
             .flatMapMany {
                 playerDetailsService.getLatestPlayerMatches(listOf(elements = it.keys.toTypedArray()))
                     .filter { playerMatch ->
-                        it[playerMatch.pubgId] != playerMatch.latestMatchId
+                        it[playerMatch.pubgId] != playerMatch.matchId
                     }
             }
 }

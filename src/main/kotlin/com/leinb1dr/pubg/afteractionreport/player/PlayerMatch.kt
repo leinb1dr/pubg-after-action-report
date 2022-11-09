@@ -6,7 +6,7 @@ import java.io.InvalidClassException
 
 interface PlayerMatch {
     val pubgId: String
-    val latestMatchId: String
+    val matchId: String
 
     companion object Factory {
         fun create(source: Any) =
@@ -20,10 +20,10 @@ interface PlayerMatch {
 
 private class PlayerMatchFromPubg(pubgData: PubgData) : PlayerMatch {
     override val pubgId: String = pubgData.id
-    override val latestMatchId: String = pubgData.relationships?.get("matches")?.data?.get(0)?.id ?: ""
+    override val matchId: String = pubgData.relationships?.get("matches")?.data?.get(0)?.id ?: ""
 }
 
 private class PlayerMatchFromUser(user: User) : PlayerMatch {
     override val pubgId: String = user.pubgId
-    override val latestMatchId: String = user.latestMatchId
+    override val matchId: String = user.latestMatchId
 }
