@@ -25,7 +25,7 @@ class MatchProcessorIntegration(@Autowired val matchProcessor: MatchProcessor) {
 
         val matchStats = runBlocking { matchProcessor.lookupDetails(playerMatch).awaitSingle() }
 
-        Assertions.assertTrue(OffsetDateTime.now().isAfter(matchStats.attributes.createdAt))
+        Assertions.assertTrue(OffsetDateTime.now().isAfter(matchStats.attributes!!.createdAt))
     }
 
 }

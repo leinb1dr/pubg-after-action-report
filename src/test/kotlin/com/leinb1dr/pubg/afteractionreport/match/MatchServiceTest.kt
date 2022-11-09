@@ -2,6 +2,7 @@ package com.leinb1dr.pubg.afteractionreport.match
 
 import com.leinb1dr.pubg.afteractionreport.core.*
 import com.leinb1dr.pubg.afteractionreport.player.PlayerMatch
+import com.leinb1dr.pubg.afteractionreport.stats.Stats
 import com.leinb1dr.pubg.afteractionreport.util.SetupWebClientMock
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -25,7 +26,7 @@ class MatchServiceTest {
     lateinit var webClient: WebClient
 
     @InjectMockKs
-    lateinit var ms: MatchService
+    lateinit var ms: MatchDetailsService
 
 
     @BeforeEach
@@ -71,11 +72,11 @@ class MatchServiceTest {
             override val matchId: String = "bb70dbd7-631d-4d95-8e9e-fc5c2fdcf55a"
         }
 
-        val matchStats:PlayerMatchStats = runBlocking {
+        val matchStats: Stats = runBlocking {
             ms.getMatchDetailsForPlayer(playerMatch).awaitSingle()
         }
 
-        assertTrue(OffsetDateTime.now().isAfter(matchStats.attributes.createdAt))
+        assertTrue(OffsetDateTime.now().isAfter(matchStats.attributes!!.createdAt))
     }
 
     @Test

@@ -4,7 +4,7 @@ import com.leinb1dr.pubg.afteractionreport.core.MatchAttributes
 import com.leinb1dr.pubg.afteractionreport.core.PlayerSeasonAttributes
 import com.leinb1dr.pubg.afteractionreport.core.PubgData
 import com.leinb1dr.pubg.afteractionreport.core.SeasonStats
-import com.leinb1dr.pubg.afteractionreport.match.MatchService
+import com.leinb1dr.pubg.afteractionreport.match.MatchDetailsService
 import com.leinb1dr.pubg.afteractionreport.player.PlayerDetailsService
 import com.leinb1dr.pubg.afteractionreport.seasons.SeasonService
 import com.leinb1dr.pubg.afteractionreport.usermatch.UserMatch
@@ -19,7 +19,7 @@ import reactor.util.function.Tuple2
 class ReportService(
     @Autowired val playerDetailsService: PlayerDetailsService,
     @Autowired val userMatchRepository: UserMatchRepository,
-    @Autowired val matchService: MatchService,
+    @Autowired val matchDetailsService: MatchDetailsService,
     @Autowired val seasonService: SeasonService
 ) {
 
@@ -64,7 +64,7 @@ class ReportService(
                 val playerMatch = it.second.copy(latestMatchId = match.id)
                 userMatchRepository.save(playerMatch)
                     .map { match }
-                    .flatMap { pubgData -> matchService.getMatch(pubgData.id) }
+                    .flatMap { pubgData -> matchDetailsService.getMatch(pubgData.id) }
                     .participantSearch(it.second.pubgId, it.third)
             }
             .filter { it.second.stats.winPlace <= 10 }

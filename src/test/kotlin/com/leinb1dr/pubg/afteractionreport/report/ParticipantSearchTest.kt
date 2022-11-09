@@ -1,7 +1,7 @@
 package com.leinb1dr.pubg.afteractionreport.report
 
 import com.leinb1dr.pubg.afteractionreport.core.SeasonStats
-import com.leinb1dr.pubg.afteractionreport.match.MatchService
+import com.leinb1dr.pubg.afteractionreport.match.MatchDetailsService
 import com.leinb1dr.pubg.afteractionreport.match.MatchServiceTest
 import com.leinb1dr.pubg.afteractionreport.util.SetupWebClientMock
 import io.mockk.every
@@ -24,7 +24,7 @@ class ParticipantSearchTest {
     lateinit var webClient: WebClient
 
     @InjectMockKs
-    lateinit var ms: MatchService
+    lateinit var ms: MatchDetailsService
 
     @BeforeEach
     fun setup() {

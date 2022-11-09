@@ -1,7 +1,7 @@
 package com.leinb1dr.pubg.afteractionreport.report
 
 import com.leinb1dr.pubg.afteractionreport.core.*
-import com.leinb1dr.pubg.afteractionreport.match.MatchService
+import com.leinb1dr.pubg.afteractionreport.match.MatchDetailsService
 import com.leinb1dr.pubg.afteractionreport.player.PlayerDetailsService
 import com.leinb1dr.pubg.afteractionreport.seasons.SeasonService
 import com.leinb1dr.pubg.afteractionreport.usermatch.UserMatch
@@ -32,7 +32,7 @@ class ReportServiceTest {
     lateinit var ps: PlayerDetailsService
 
     @MockK
-    lateinit var ms: MatchService
+    lateinit var ms: MatchDetailsService
 
     @MockK
     lateinit var ss: SeasonService

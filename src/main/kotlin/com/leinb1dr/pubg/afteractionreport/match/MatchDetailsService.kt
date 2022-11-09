@@ -2,6 +2,7 @@ package com.leinb1dr.pubg.afteractionreport.match
 
 import com.leinb1dr.pubg.afteractionreport.core.PubgWrapper
 import com.leinb1dr.pubg.afteractionreport.player.PlayerMatch
+import com.leinb1dr.pubg.afteractionreport.stats.Stats
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -12,9 +13,9 @@ import reactor.core.publisher.Mono
 
 
 @Service
-class MatchService(@Autowired @Qualifier("pubgClient") private val client: WebClient) {
+class MatchDetailsService(@Autowired @Qualifier("pubgClient") private val client: WebClient) {
 
-    private val logger = LoggerFactory.getLogger(MatchService::class.java)
+    private val logger = LoggerFactory.getLogger(MatchDetailsService::class.java)
 
     fun getMatch(s: String): Mono<PubgWrapper> = client.get().uri("/matches/{id}", s).retrieve()
         .toEntity<PubgWrapper>()
@@ -22,8 +23,8 @@ class MatchService(@Autowired @Qualifier("pubgClient") private val client: WebCl
         .doOnError { t -> logger.error("Failed to get match details", t) }
         .onErrorResume { Mono.empty() }
 
-    fun getMatchDetailsForPlayer(playerMatch: PlayerMatch): Mono<PlayerMatchStats> =
-        getMatch(playerMatch.matchId).map(PlayerMatchStats::create)
+    fun getMatchDetailsForPlayer(playerMatch: PlayerMatch): Mono<Stats> =
+        getMatch(playerMatch.matchId).map(Stats::create)
 
 
 }

@@ -1,7 +1,7 @@
 package com.leinb1dr.pubg.afteractionreport.report
 
 import com.leinb1dr.pubg.afteractionreport.core.SeasonStats
-import com.leinb1dr.pubg.afteractionreport.match.MatchService
+import com.leinb1dr.pubg.afteractionreport.match.MatchDetailsService
 import io.mockk.mockkClass
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.runBlocking
@@ -15,7 +15,7 @@ import org.springframework.test.context.ActiveProfiles
 @SpringBootTest
 @ActiveProfiles("test")
 @Import(com.leinb1dr.pubg.afteractionreport.config.TestConfiguration::class)
-class ParticipantSearchIntegration(@Autowired private val ms: MatchService) {
+class ParticipantSearchIntegration(@Autowired private val ms: MatchDetailsService) {
 
     @Test
     fun createReportTest(){

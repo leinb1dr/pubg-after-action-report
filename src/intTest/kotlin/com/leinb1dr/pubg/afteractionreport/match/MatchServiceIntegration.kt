@@ -2,6 +2,7 @@ package com.leinb1dr.pubg.afteractionreport.match
 
 import com.leinb1dr.pubg.afteractionreport.core.ParticipantAttributes
 import com.leinb1dr.pubg.afteractionreport.player.PlayerMatch
+import com.leinb1dr.pubg.afteractionreport.stats.Stats
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
@@ -16,7 +17,7 @@ import java.time.OffsetDateTime
 @SpringBootTest
 @ActiveProfiles("test")
 @Import(com.leinb1dr.pubg.afteractionreport.config.TestConfiguration::class)
-class MatchServiceIntegration(@Autowired private val ms: MatchService) {
+class MatchServiceIntegration(@Autowired private val ms: MatchDetailsService) {
 
     @Test
     fun `Get match details for player`() {
@@ -25,11 +26,11 @@ class MatchServiceIntegration(@Autowired private val ms: MatchService) {
             override val matchId: String = "bb70dbd7-631d-4d95-8e9e-fc5c2fdcf55a"
         }
 
-        val matchStats:PlayerMatchStats = runBlocking {
+        val matchStats: Stats = runBlocking {
             ms.getMatchDetailsForPlayer(playerMatch).awaitSingle()
         }
 
-        Assertions.assertTrue(OffsetDateTime.now().isAfter(matchStats.attributes.createdAt))
+        Assertions.assertTrue(OffsetDateTime.now().isAfter(matchStats.attributes!!.createdAt))
     }
 
     @Test
