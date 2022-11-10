@@ -6,8 +6,8 @@ import reactor.core.publisher.Flux
 
 @Service
 class PlayerProcessor(
-    @Autowired val playerMatchService: PlayerMatchService,
-    @Autowired val playerDetailsService: PlayerDetailsService
+    @Autowired private val playerMatchService: PlayerMatchService,
+    @Autowired private val playerDetailsService: PlayerDetailsService
 ) {
     fun findAll(): Flux<PlayerMatch> =
         playerMatchService.getProcessedPlayerMatches()

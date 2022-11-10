@@ -1,5 +1,6 @@
 package com.leinb1dr.pubg.afteractionreport.player
 
+import com.leinb1dr.pubg.afteractionreport.core.GameMode
 import com.leinb1dr.pubg.afteractionreport.core.PubgWrapper
 import com.leinb1dr.pubg.afteractionreport.stats.Stats
 import org.slf4j.LoggerFactory
@@ -15,14 +16,14 @@ class PlayerSeasonService(@Autowired @Qualifier("pubgClient") private val client
 
     private val logger = LoggerFactory.getLogger(PlayerDetailsService::class.java)
 
-    fun getPlayerSeasonStats(pubgId: String, seasonId: String): Mono<Stats> {
-        return client.get().uri("/players/{pubgId}/seasons/{seasonId}", pubgId, seasonId)
+    fun getPlayerSeasonStats(playerMatch: PlayerMatch, seasonId: String, gameMode: GameMode): Mono<Stats> {
+        return client.get().uri("/players/{pubgId}/seasons/{seasonId}", playerMatch.pubgId, seasonId)
             .retrieve()
             .toEntity<PubgWrapper>()
             .map { it.body ?: throw Exception("No season stats missing: $seasonId") }
             .doOnError { t -> logger.error("Unable to get season stats for user", t) }
             .onErrorResume { Mono.empty() }
-            .map(Stats::create)
+            .map{ Stats.create(it, playerMatch, gameMode) }
     }
 
 }

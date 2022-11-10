@@ -1,5 +1,6 @@
 package com.leinb1dr.pubg.afteractionreport.match
 
+import com.leinb1dr.pubg.afteractionreport.core.MatchAttributes
 import com.leinb1dr.pubg.afteractionreport.core.PubgWrapper
 import com.leinb1dr.pubg.afteractionreport.player.PlayerMatch
 import com.leinb1dr.pubg.afteractionreport.stats.Stats
@@ -24,7 +25,7 @@ class MatchDetailsService(@Autowired @Qualifier("pubgClient") private val client
         .onErrorResume { Mono.empty() }
 
     fun getMatchDetailsForPlayer(playerMatch: PlayerMatch): Mono<Stats> =
-        getMatch(playerMatch.matchId).map(Stats::create)
+        getMatch(playerMatch.matchId).map{Stats.create(it, playerMatch, (it.data!![0].attributes as MatchAttributes).gameMode)}
 
 
 }

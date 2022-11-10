@@ -1,7 +1,6 @@
 package com.leinb1dr.pubg.afteractionreport.stats
 
-import com.leinb1dr.pubg.afteractionreport.core.MatchAttributes
-import com.leinb1dr.pubg.afteractionreport.core.PubgData
+import com.leinb1dr.pubg.afteractionreport.core.*
 import com.leinb1dr.pubg.afteractionreport.match.MatchDetailsService
 import com.leinb1dr.pubg.afteractionreport.player.PlayerMatch
 import com.leinb1dr.pubg.afteractionreport.player.PlayerSeasonService
@@ -47,6 +46,7 @@ class StatsProcessorTest {
             )
         } returns Mono.just(object : Stats {
             override val attributes: MatchAttributes = MatchAttributes()
+            override val stats: AbstractStats = ParticipantStats()
         })
         every { seasonService.getCurrentSeason() } returns Mono.just(
             PubgData(
@@ -56,12 +56,16 @@ class StatsProcessorTest {
         )
         every {
             playerSeasonService.getPlayerSeasonStats(
-                "account.0bee6c2ee01d44299425625bcb9e7ddb",
-                "division.bro.official.2017-pre1"
+                object: PlayerMatch {
+                    override val pubgId: String = "account.0bee6c2ee01d44299425625bcb9e7d00"
+                    override val matchId: String = "asdf"
+                },
+                "division.bro.official.pc-2018-20",
+                GameMode.SOLO_FPP
             )
-        } returns Mono.just(object:Stats{
-            override val attributes: MatchAttributes?
-                get() = null
+        } returns Mono.just(object : Stats {
+            override val attributes: MatchAttributes? = null
+            override val stats: AbstractStats = SeasonStats()
         })
 
 

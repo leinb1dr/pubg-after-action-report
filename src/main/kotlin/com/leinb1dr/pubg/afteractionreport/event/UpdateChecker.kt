@@ -2,7 +2,7 @@
 
 package com.leinb1dr.pubg.afteractionreport.event
 
-import com.leinb1dr.pubg.afteractionreport.report.ReportEngine
+import com.leinb1dr.pubg.afteractionreport.report.ReportPipeline
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
@@ -13,19 +13,15 @@ import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 
 @Service
-class UpdateChecker(@Autowired private val engine: ReportEngine) {
+class UpdateChecker(@Autowired private val engine: ReportPipeline) {
 
     private val sink = Sinks.many().replay().latest<Long?>()
     private val logger = LoggerFactory.getLogger(UpdateChecker::class.java)
 
     @PostConstruct
     fun register() {
-        val test = sink.asFlux()
-            .publish()
-        test
-            .flatMap { engine.checkForReports(it) }
-            .map(Map<*, *>::toString)
-            .subscribe(logger::info)
+        val test = sink.asFlux().publish()
+        test.subscribe { engine.generateAndSend() }
         test.connect()
     }
 
@@ -35,7 +31,7 @@ class UpdateChecker(@Autowired private val engine: ReportEngine) {
     }
 
     @PreDestroy
-    fun shutdown(){
+    fun shutdown() {
         sink.tryEmitComplete()
     }
 }

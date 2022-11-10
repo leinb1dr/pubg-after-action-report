@@ -1,7 +1,8 @@
 package com.leinb1dr.pubg.afteractionreport.stats
 
+import com.leinb1dr.pubg.afteractionreport.core.MatchAttributes
 import com.leinb1dr.pubg.afteractionreport.match.MatchDetailsService
-import com.leinb1dr.pubg.afteractionreport.match.ReportStats
+import com.leinb1dr.pubg.afteractionreport.match.RawReportStats
 import com.leinb1dr.pubg.afteractionreport.player.PlayerMatch
 import com.leinb1dr.pubg.afteractionreport.player.PlayerSeasonService
 import com.leinb1dr.pubg.afteractionreport.seasons.SeasonService
@@ -13,13 +14,18 @@ import reactor.core.publisher.Mono
 class StatsProcessor(
     @Autowired val matchDetailsService: MatchDetailsService,
     @Autowired val playerSeasonService: PlayerSeasonService,
-    @Autowired val seasonsService:SeasonService
+    @Autowired val seasonsService: SeasonService
 ) {
-    fun collectStats(playerMatch: PlayerMatch): Mono<ReportStats> {
+    fun collectStats(playerMatch: PlayerMatch): Mono<RawReportStats> {
         val matchStatsMono = matchDetailsService.getMatchDetailsForPlayer(playerMatch)
-        val seasonStatsMono = seasonsService.getCurrentSeason().flatMap { playerSeasonService.getPlayerSeasonStats(playerMatch.pubgId, it.id) }
-
-        return Mono.zip(matchStatsMono, seasonStatsMono) {o1,o2->ReportStats(o1,o2)}
+        return seasonsService.getCurrentSeason().zipWith(matchStatsMono)
+            .flatMap { matchAndSeason ->
+                playerSeasonService.getPlayerSeasonStats(
+                    playerMatch,
+                    matchAndSeason.t1.id,
+                    (matchAndSeason.t2.attributes as MatchAttributes).gameMode
+                ).map { RawReportStats(matchAndSeason.t2, it) }
+            }
     }
 
 
