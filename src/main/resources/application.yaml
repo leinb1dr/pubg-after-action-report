@@ -12,6 +12,8 @@ spring:
 management:
   metrics:
     export:
+      stackdriver:
+        enabled: false
       prometheus:
         enabled: true
   endpoints:
@@ -24,3 +26,13 @@ management:
           - prometheus
           - health
           - liveness
+
+logging:
+  level:
+    root: WARN
+    org:
+      springframework:
+        data:
+          mongodb: DEBUG
+    com:
+      leinb1dr: DEBUG

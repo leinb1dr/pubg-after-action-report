@@ -8,6 +8,7 @@ import reactor.core.publisher.Mono
 import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import kotlin.math.max
 
 @Service
 class ReportProcessor {
@@ -16,33 +17,35 @@ class ReportProcessor {
             val matchAttributes = it.matchStats.attributes!!
             val matchStats = it.matchStats.stats as ParticipantStats
             val seasonStats = it.seasonStats.stats as SeasonStats
-            val roundsPlayed = seasonStats.roundsPlayed
+            // Ensure no div by 0 error
+            val roundsPlayed = max(1,seasonStats.roundsPlayed)
 
             val fields = ReportFields(
                 AnnotatedField(
                     matchStats.DBNOs,
-                    setAnnotation(matchStats.DBNOs, seasonStats.DBNOs, roundsPlayed)
+                    setAnnotation(matchStats.DBNOs, seasonStats.DBNOs / roundsPlayed)
                 ),
                 AnnotatedField(
                     matchStats.assists,
-                    setAnnotation(matchStats.assists, seasonStats.assists, roundsPlayed)
+                    setAnnotation(matchStats.assists, seasonStats.assists / roundsPlayed)
                 ),
                 AnnotatedField(
                     matchStats.damageDealt,
-                    setAnnotation(matchStats.damageDealt, seasonStats.damageDealt, roundsPlayed)
+                    setAnnotation(matchStats.damageDealt, seasonStats.damageDealt / roundsPlayed)
                 ),
                 matchStats.deathType,
                 AnnotatedField(
                     matchStats.headshotKills,
-                    setAnnotation(matchStats.headshotKills, seasonStats.headshotKills, roundsPlayed)
+                    setAnnotation(matchStats.headshotKills, seasonStats.headshotKills / roundsPlayed)
                 ),
                 matchStats.name,
                 AnnotatedField(
                     matchStats.kills,
-                    setAnnotation(matchStats.kills, seasonStats.kills, roundsPlayed)
+                    setAnnotation(matchStats.kills, seasonStats.kills / roundsPlayed)
                 ),
                 matchStats.winPlace,
-                isInteresting(matchStats.heals, seasonStats.heals)
+                isInteresting(matchStats.heals, seasonStats.heals),
+                isInteresting(matchStats.revives, seasonStats.revives)
             )
 
             return@map Report(
@@ -81,14 +84,26 @@ class ReportProcessor {
 
     private fun isInteresting(matchStat: Int, seasonStat: Int): Int {
         val upper = seasonStat * 1.25
-        val lower = seasonStat * .75
-        if (matchStat >= upper || matchStat <= lower) return matchStat
+        if (matchStat >= upper) return matchStat
         return -1
     }
 
-    private fun setAnnotation(matchStat: Int, seasonStat: Int, roundsPlayed: Int): ReportAnnotation =
-        if (matchStat == 0) ReportAnnotation.NONE else if ((seasonStat / roundsPlayed) >= seasonStat) ReportAnnotation.ABOVE else ReportAnnotation.BELOW
+    private val matchCompare: Comparator<Number> = Comparator { match, season ->
+        when (match) {
+            is Double -> match.compareTo(season as Double)
+            is Int -> match.compareTo(season as Int)
+            else -> 0
+        }
+    }
 
-    private fun setAnnotation(matchStat: Double, seasonStat: Double, roundsPlayed: Int): ReportAnnotation =
-        if (matchStat == 0.0) ReportAnnotation.NONE else if ((seasonStat / roundsPlayed) >= seasonStat) ReportAnnotation.ABOVE else ReportAnnotation.BELOW
+    private fun <T : Number> setAnnotation(matchStat: T, seasonAverage: T): ReportAnnotation =
+        when (matchCompare.compare(matchStat, seasonAverage)) {
+            -1 -> ReportAnnotation.BELOW
+            0 -> ReportAnnotation.EVEN
+            1 -> ReportAnnotation.ABOVE
+            else -> ReportAnnotation.NONE
+        }
+
+
+//        if (seasonStat == 0.0) ReportAnnotation.NONE else if ((seasonStat / roundsPlayed) > matchStat) ReportAnnotation.BELOW else ReportAnnotation.ABOVE
 }

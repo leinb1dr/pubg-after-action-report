@@ -24,7 +24,7 @@ class StatsProcessor(
                     playerMatch,
                     matchAndSeason.t1.id,
                     (matchAndSeason.t2.attributes as MatchAttributes).gameMode
-                ).map { RawReportStats(matchAndSeason.t2, it) }
+                ).map { RawReportStats(playerMatch, matchAndSeason.t2, it) }
             }
     }
 

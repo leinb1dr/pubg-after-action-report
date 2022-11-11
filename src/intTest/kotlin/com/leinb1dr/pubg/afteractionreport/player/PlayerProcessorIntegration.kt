@@ -27,12 +27,12 @@ class PlayerProcessorIntegration(
             User(
                 discordId = "",
                 pubgId = "account.b668bf9315cb46fca5070402a9f30ee9",
-                latestMatchId = ""
+                matchId = ""
             ),
             User(
                 discordId = "",
                 pubgId = "account.aa9631af0c544f73b09c88b8ddde75f6",
-                latestMatchId = ""
+                matchId = ""
             )
         )
 

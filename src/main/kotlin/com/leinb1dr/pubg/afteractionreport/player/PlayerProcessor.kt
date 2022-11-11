@@ -3,6 +3,7 @@ package com.leinb1dr.pubg.afteractionreport.player
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 
 @Service
 class PlayerProcessor(
@@ -18,4 +19,7 @@ class PlayerProcessor(
                         it[playerMatch.pubgId] != playerMatch.matchId
                     }
             }
+
+    fun updatePlayerMatch(playerMatch: PlayerMatch): Mono<Long> =
+        playerMatchService.updatePlayerMatch(playerMatch.pubgId, playerMatch.matchId)
 }

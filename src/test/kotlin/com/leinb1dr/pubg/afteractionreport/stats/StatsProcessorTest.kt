@@ -39,13 +39,9 @@ class StatsProcessorTest {
         }
 
         every {
-            matchDetailsService.getMatchDetailsForPlayer(match {
-                it.matchId == "bb70dbd7-631d-4d95-8e9e-fc5c2fdcf55a"
-                        && it.pubgId == "account.0bee6c2ee01d44299425625bcb9e7ddb"
-            }
-            )
+            matchDetailsService.getMatchDetailsForPlayer(playerMatch)
         } returns Mono.just(object : Stats {
-            override val attributes: MatchAttributes = MatchAttributes()
+            override val attributes: MatchAttributes = MatchAttributes(gameMode = GameMode.SQUAD_FPP)
             override val stats: AbstractStats = ParticipantStats()
         })
         every { seasonService.getCurrentSeason() } returns Mono.just(
@@ -56,12 +52,9 @@ class StatsProcessorTest {
         )
         every {
             playerSeasonService.getPlayerSeasonStats(
-                object: PlayerMatch {
-                    override val pubgId: String = "account.0bee6c2ee01d44299425625bcb9e7d00"
-                    override val matchId: String = "asdf"
-                },
-                "division.bro.official.pc-2018-20",
-                GameMode.SOLO_FPP
+                match { it == playerMatch },
+                "division.bro.official.2017-pre1",
+                match{true}
             )
         } returns Mono.just(object : Stats {
             override val attributes: MatchAttributes? = null

@@ -15,31 +15,6 @@ class PlayerDetailsService(@Autowired @Qualifier("pubgClient") private val clien
 
     private val logger = LoggerFactory.getLogger(PlayerDetailsService::class.java)
 
-    fun findPlayer(s: String): Mono<PubgWrapper> {
-
-        return client.get().uri("/players?filter[playerNames]={name}", s).retrieve().toEntity<PubgWrapper>()
-            .map { it.body ?: throw Exception("Player Not Found") }
-            .doOnError { t -> logger.error("Failed to find player by name", t) }
-            .onErrorResume { Mono.empty() }
-
-    }
-
-    fun getPlayer(id: String): Mono<PubgWrapper> {
-        return client.get().uri("/players/{id}", id).retrieve().toEntity<PubgWrapper>()
-            .map { it.body ?: throw Exception("Player Not Found") }
-            .doOnError { t -> logger.error("Failed to get player by id", t) }
-            .onErrorResume { Mono.empty() }
-    }
-
-    fun getPlayerSeasonStats(pubgId: String, seasonId: String): Mono<PubgWrapper> {
-        return client.get().uri("/players/{pubgId}/seasons/{seasonId}", pubgId, seasonId)
-            .retrieve()
-            .toEntity<PubgWrapper>()
-            .map { it.body ?: throw Exception("No season stats missing: $seasonId") }
-            .doOnError { t -> logger.error("Unable to get season stats for user", t) }
-            .onErrorResume { Mono.empty() }
-    }
-
     fun getLatestPlayerMatches(pubgIds: List<String>): Flux<PlayerMatch> {
         return findPlayersByIds(pubgIds).flatMapMany { Flux.fromArray(it.data!!) }
             .map(PlayerMatch::create)

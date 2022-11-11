@@ -31,7 +31,7 @@ interface Stats {
     private class StatsFromSeason(pubgWrapper: PubgWrapper, gameMode: GameMode) : Stats {
         override val attributes: MatchAttributes? = null
         override val stats: AbstractStats =
-            (pubgWrapper.data!![0].attributes as PlayerSeasonAttributes).gameModeStats[gameMode] ?: SeasonStats()
+            (pubgWrapper.data?.get(0)?.attributes as PlayerSeasonAttributes).gameModeStats[gameMode] ?: SeasonStats()
     }
 }
 

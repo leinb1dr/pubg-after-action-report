@@ -1,8 +1,11 @@
 package com.leinb1dr.pubg.afteractionreport.core
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 data class SeasonStats(
     override val assists: Int = 0,
     override val boosts: Int = 0,
+    @JsonProperty("dBNOs")
     override val DBNOs: Int = 0,
     val dailyKills: Int = 0,
     val dailyWins: Int = 0,
@@ -36,44 +39,4 @@ data class SeasonStats(
     val weeklyWins: Int = 0,
     val winPoints: Double = 0.0,
     val wins: Int = 0
-) : AbstractStats() {
-    companion object Default {
-        fun empty() = SeasonStats(
-            0,
-            0,
-            0,
-            0,
-            0,
-            0.0,
-            0,
-            0,
-            0,
-            0.0,
-            0,
-            0.0,
-            0.0,
-            0,
-            0,
-            0,
-            0.0,
-            "",
-            0,
-            0.0,
-            0,
-            0,
-            1,
-            0,
-            0.0,
-            0,
-            0,
-            0,
-            0,
-            0.0,
-            0,
-            0,
-            0,
-            0.0,
-            0
-        )
-    }
-}
+) : AbstractStats()

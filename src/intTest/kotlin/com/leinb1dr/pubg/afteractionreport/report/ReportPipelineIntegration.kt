@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.ActiveProfiles
 import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 
 
 @SpringBootTest
@@ -28,18 +29,32 @@ class ReportPipelineIntegration(
             User(
                 discordId = "",
                 pubgId = "account.b668bf9315cb46fca5070402a9f30ee9",
-                latestMatchId = ""
+                matchId = ""
             ),
             User(
                 discordId = "",
                 pubgId = "account.aa9631af0c544f73b09c88b8ddde75f6",
-                latestMatchId = ""
+                matchId = ""
             )
         )
+
+        every {
+            userRepository.findAndSetMatchIdByPubgId(
+                "account.b668bf9315cb46fca5070402a9f30ee9",
+                match { true }
+            )
+        } returns Mono.just(1)
+        every {
+            userRepository.findAndSetMatchIdByPubgId(
+                "account.aa9631af0c544f73b09c88b8ddde75f6",
+                match { true }
+            )
+        } returns Mono.just(1)
 
         val reportStats = runBlocking { reportPipeline.generateAndSend().collectList().awaitSingle() }
 
         assertEquals(2, reportStats.size)
+        assertEquals("Place", reportStats[0].embeds[0].fields[2].name)
     }
 
 }

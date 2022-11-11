@@ -2,6 +2,7 @@ package com.leinb1dr.pubg.afteractionreport.player
 
 import com.leinb1dr.pubg.afteractionreport.core.PubgData
 import com.leinb1dr.pubg.afteractionreport.user.User
+import org.bson.types.ObjectId
 import java.io.InvalidClassException
 
 interface PlayerMatch {
@@ -13,17 +14,24 @@ interface PlayerMatch {
             when (source) {
                 is PubgData -> PlayerMatchFromPubg(source)
                 is User -> PlayerMatchFromUser(source)
+                is DefaultPlayerMatch -> source
                 else -> throw InvalidClassException("Unknown type to construct PlayerMatch")
             }
     }
 }
 
-private class PlayerMatchFromPubg(pubgData: PubgData) : PlayerMatch {
+data class DefaultPlayerMatch(
+    override val pubgId: String,
+    override val matchId: String
+) : PlayerMatch
+
+private data class PlayerMatchFromPubg(val pubgData: PubgData) : PlayerMatch {
     override val pubgId: String = pubgData.id
     override val matchId: String = pubgData.relationships?.get("matches")?.data?.get(0)?.id ?: ""
+
 }
 
-private class PlayerMatchFromUser(user: User) : PlayerMatch {
+private data class PlayerMatchFromUser(val user: User) : PlayerMatch {
     override val pubgId: String = user.pubgId
-    override val matchId: String = user.latestMatchId
+    override val matchId: String = user.matchId
 }

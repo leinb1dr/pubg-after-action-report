@@ -1,6 +1,7 @@
 package com.leinb1dr.pubg.afteractionreport.player
 
 import com.leinb1dr.pubg.afteractionreport.core.GameMode
+import com.leinb1dr.pubg.afteractionreport.core.PlayerSeasonAttributes
 import com.leinb1dr.pubg.afteractionreport.core.PubgData
 import com.leinb1dr.pubg.afteractionreport.core.PubgWrapper
 import com.leinb1dr.pubg.afteractionreport.stats.Stats
@@ -49,7 +50,7 @@ class PlayerSeasonServiceTest() {
 
         val pubgResults: Stats = runBlocking {
             ps.getPlayerSeasonStats(
-                object: PlayerMatch {
+                object : PlayerMatch {
                     override val pubgId: String = "account.0bee6c2ee01d44299425625bcb9e7d00"
                     override val matchId: String = "asdf"
                 },
@@ -63,6 +64,6 @@ class PlayerSeasonServiceTest() {
 
     companion object {
 
-        val playerSeason = PubgWrapper(arrayOf(PubgData("playerSeason")))
+        val playerSeason = PubgWrapper(arrayOf(PubgData("playerSeason", attributes = PlayerSeasonAttributes(mapOf()))))
     }
 }

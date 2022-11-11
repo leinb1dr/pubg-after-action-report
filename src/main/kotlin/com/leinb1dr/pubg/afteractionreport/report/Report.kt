@@ -8,7 +8,7 @@ data class Report(
 )
 
 enum class ReportAnnotation(val emoji: String) {
-    ABOVE(":chicken:"), EVEN(":heavy_equals_sign:"), BELOW(":potato:"), NONE("")
+    ABOVE("<:helm:415709362397642753>"), EVEN(":heavy_equals_sign:"), BELOW(""), NONE("")
 }
 
 data class ReportFields(
@@ -22,11 +22,11 @@ data class ReportFields(
     val kills: AnnotatedField<Int>,
     val winPlace: Int,
     val heals: Int,
+    val revives: Int,
 //    val killPlace: Int,
 //    val killStreaks: Int,
 //    val longestKill: Double,
 //    val playerId: String = "#PlayerUnknown",
-//    val revives: Int,
 //    val rideDistance: Double,
 //    val roadKills: Int,
 //    val swimDistance: Double,
@@ -38,4 +38,6 @@ data class ReportFields(
 
 )
 
-data class AnnotatedField<T>(val value: T, val annotation: ReportAnnotation)
+data class AnnotatedField<T>(val value: T, val annotation: ReportAnnotation) {
+    override fun toString(): String = "$value ${annotation.emoji}".trim()
+}
