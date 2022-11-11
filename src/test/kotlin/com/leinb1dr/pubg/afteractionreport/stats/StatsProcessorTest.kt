@@ -1,7 +1,6 @@
 package com.leinb1dr.pubg.afteractionreport.stats
 
-import com.leinb1dr.pubg.afteractionreport.core.MatchAttributes
-import com.leinb1dr.pubg.afteractionreport.core.PubgData
+import com.leinb1dr.pubg.afteractionreport.core.*
 import com.leinb1dr.pubg.afteractionreport.match.MatchDetailsService
 import com.leinb1dr.pubg.afteractionreport.player.PlayerMatch
 import com.leinb1dr.pubg.afteractionreport.player.PlayerSeasonService
@@ -40,13 +39,10 @@ class StatsProcessorTest {
         }
 
         every {
-            matchDetailsService.getMatchDetailsForPlayer(match {
-                it.matchId == "bb70dbd7-631d-4d95-8e9e-fc5c2fdcf55a"
-                        && it.pubgId == "account.0bee6c2ee01d44299425625bcb9e7ddb"
-            }
-            )
+            matchDetailsService.getMatchDetailsForPlayer(playerMatch)
         } returns Mono.just(object : Stats {
-            override val attributes: MatchAttributes = MatchAttributes()
+            override val attributes: MatchAttributes = MatchAttributes(gameMode = GameMode.SQUAD_FPP)
+            override val stats: AbstractStats = ParticipantStats()
         })
         every { seasonService.getCurrentSeason() } returns Mono.just(
             PubgData(
@@ -56,12 +52,13 @@ class StatsProcessorTest {
         )
         every {
             playerSeasonService.getPlayerSeasonStats(
-                "account.0bee6c2ee01d44299425625bcb9e7ddb",
-                "division.bro.official.2017-pre1"
+                match { it == playerMatch },
+                "division.bro.official.2017-pre1",
+                match{true}
             )
-        } returns Mono.just(object:Stats{
-            override val attributes: MatchAttributes?
-                get() = null
+        } returns Mono.just(object : Stats {
+            override val attributes: MatchAttributes? = null
+            override val stats: AbstractStats = SeasonStats()
         })
 
 

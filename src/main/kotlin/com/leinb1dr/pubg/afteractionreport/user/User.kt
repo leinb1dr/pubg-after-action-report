@@ -4,10 +4,11 @@ import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 
-@Document(collection = "RegisteredUser")
+@Document(collection = "aarUser")
 data class User(
     @Id
     val id: ObjectId = ObjectId.get(),
     val discordId: String,
     val pubgId: String,
-    val latestMatchId: String)
+    val matchId: String = ""
+)

@@ -42,6 +42,7 @@ class PubgResponseDeserializerTest(@Autowired val om: ObjectMapper) {
 
         Assertions.assertEquals("playerSeason", readValue.data!![0].type)
         Assertions.assertTrue(readValue.data!![0].attributes is PlayerSeasonAttributes)
+        Assertions.assertEquals(31, (readValue.data!![0].attributes as PlayerSeasonAttributes).gameModeStats[GameMode.DUO_FPP]!!.DBNOs)
     }
 
     @Test
