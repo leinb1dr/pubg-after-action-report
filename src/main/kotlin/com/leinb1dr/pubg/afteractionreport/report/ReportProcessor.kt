@@ -18,7 +18,7 @@ class ReportProcessor {
             val matchStats = it.matchStats.stats as ParticipantStats
             val seasonStats = it.seasonStats.stats as SeasonStats
             // Ensure no div by 0 error
-            val roundsPlayed = max(1,seasonStats.roundsPlayed)
+            val roundsPlayed = max(1, seasonStats.roundsPlayed)
 
             val fields = ReportFields(
                 AnnotatedField(
@@ -45,7 +45,17 @@ class ReportProcessor {
                 ),
                 matchStats.winPlace,
                 isInteresting(matchStats.heals, seasonStats.heals),
-                isInteresting(matchStats.revives, seasonStats.revives)
+                isInteresting(matchStats.revives, seasonStats.revives),
+                isInteresting(matchStats.killStreaks, seasonStats.maxKillStreaks),
+                isInteresting(matchStats.longestKill, seasonStats.longestKill),
+                isInteresting(matchStats.rideDistance, seasonStats.rideDistance),
+                isInteresting(matchStats.roadKills, seasonStats.roadKills),
+                isInteresting(matchStats.swimDistance, seasonStats.swimDistance),
+                isInteresting(matchStats.teamKills, seasonStats.teamKills),
+                isInteresting(matchStats.timeSurvived, seasonStats.timeSurvived),
+                isInteresting(matchStats.vehicleDestroys, seasonStats.vehicleDestroys),
+                isInteresting(matchStats.walkDistance, seasonStats.walkDistance),
+                isInteresting(matchStats.weaponsAcquired, seasonStats.weaponsAcquired):
             )
 
             return@map Report(
@@ -86,6 +96,12 @@ class ReportProcessor {
         val upper = seasonStat * 1.25
         if (matchStat >= upper) return matchStat
         return -1
+    }
+
+    private fun isInteresting(matchStat: Double, seasonStat: Double): Double {
+        val upper = seasonStat * 1.25
+        if (matchStat >= upper) return matchStat
+        return -1.0
     }
 
     private val matchCompare: Comparator<Number> = Comparator { match, season ->
