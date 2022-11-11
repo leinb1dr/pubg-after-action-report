@@ -39,24 +39,24 @@ class PlayerMatchServiceTest {
             User(
                 discordId = "asdf",
                 pubgId = "account.0bee6c2ee01d44299425625bcb9e7d00",
-                latestMatchId = "bb70dbd7-631d-4d95-8e9e-fc5c2fdcf500"
+                matchId = "bb70dbd7-631d-4d95-8e9e-fc5c2fdcf500"
             ),
             User(
                 discordId = "asdf",
                 pubgId = "account.0bee6c2ee01d44299425625bcb9e7d01",
-                latestMatchId = "bb70dbd7-631d-4d95-8e9e-fc5c2fdcf501"
+                matchId = "bb70dbd7-631d-4d95-8e9e-fc5c2fdcf501"
             ),
             User(
                 discordId = "asdf",
                 pubgId = "account.0bee6c2ee01d44299425625bcb9e7d02",
-                latestMatchId = "bb70dbd7-631d-4d95-8e9e-fc5c2fdcf502"
+                matchId = "bb70dbd7-631d-4d95-8e9e-fc5c2fdcf502"
             ),
         )
 
         val listOfUsersWithNoMatches = Flux.just(
-            User(discordId = "asdf", pubgId = "account.0bee6c2ee01d44299425625bcb9e7d00", latestMatchId = ""),
-            User(discordId = "asdf", pubgId = "account.0bee6c2ee01d44299425625bcb9e7d01", latestMatchId = ""),
-            User(discordId = "asdf", pubgId = "account.0bee6c2ee01d44299425625bcb9e7d02", latestMatchId = ""),
+            User(discordId = "asdf", pubgId = "account.0bee6c2ee01d44299425625bcb9e7d00", matchId = ""),
+            User(discordId = "asdf", pubgId = "account.0bee6c2ee01d44299425625bcb9e7d01", matchId = ""),
+            User(discordId = "asdf", pubgId = "account.0bee6c2ee01d44299425625bcb9e7d02", matchId = ""),
         )
     }
 
