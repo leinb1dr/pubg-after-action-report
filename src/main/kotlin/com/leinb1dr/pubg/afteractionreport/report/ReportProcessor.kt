@@ -55,7 +55,7 @@ class ReportProcessor {
                 isInteresting(matchStats.timeSurvived, seasonStats.timeSurvived),
                 isInteresting(matchStats.vehicleDestroys, seasonStats.vehicleDestroys),
                 isInteresting(matchStats.walkDistance, seasonStats.walkDistance),
-                isInteresting(matchStats.weaponsAcquired, seasonStats.weaponsAcquired):
+                isInteresting(matchStats.weaponsAcquired, seasonStats.weaponsAcquired)
             )
 
             return@map Report(
