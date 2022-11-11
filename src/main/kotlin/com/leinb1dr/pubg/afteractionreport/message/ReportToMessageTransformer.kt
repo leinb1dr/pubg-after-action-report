@@ -15,7 +15,17 @@ private val labels: Map<String, String> = mapOf(
     Pair("DBNOs", "Knocks"),
     Pair("damageDealt", "Damage Dealt"),
     Pair("heals", "Heals Used"),
-    Pair("revives", "Revives")
+    Pair("revives", "Revives"),
+    Pair("killStreaks", "Kill Streaks"),
+    Pair("longestKill", "Longest Kill"),
+    Pair("rideDistance", "Ride Distance"),
+    Pair("roadKills", "Road Kills"),
+    Pair("swimDistance", "swimDistance"),
+    Pair("teamKills", "Team Kills"),
+    Pair("timeSurvived", "Time Survived"),
+    Pair("vehicleDestroys", "Vehicles Destroyed"),
+    Pair("walkDistance", "Walk Distance"),
+    Pair("weaponsAcquired", "Weapons Acquired")
 )
 
 val order: List<String> = labels.entries.map { it.value }
