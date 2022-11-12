@@ -94,7 +94,7 @@ class ReportProcessor {
 
     private fun isInteresting(matchStat: Int, seasonStat: Int): Int {
         val upper = seasonStat * 1.25
-        if (matchStat >= upper) return matchStat
+        if (matchStat > 0 && matchStat >= upper) return matchStat
         return -1
     }
 
