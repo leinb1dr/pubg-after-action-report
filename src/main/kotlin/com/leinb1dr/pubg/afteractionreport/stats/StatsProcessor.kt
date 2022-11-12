@@ -1,6 +1,7 @@
 package com.leinb1dr.pubg.afteractionreport.stats
 
 import com.leinb1dr.pubg.afteractionreport.core.MatchAttributes
+import com.leinb1dr.pubg.afteractionreport.core.ParticipantStats
 import com.leinb1dr.pubg.afteractionreport.match.MatchDetailsService
 import com.leinb1dr.pubg.afteractionreport.match.RawReportStats
 import com.leinb1dr.pubg.afteractionreport.player.PlayerMatch
@@ -25,6 +26,7 @@ class StatsProcessor(
                     matchAndSeason.t1.id,
                     (matchAndSeason.t2.attributes as MatchAttributes).gameMode
                 ).map { RawReportStats(playerMatch, matchAndSeason.t2, it) }
+                    .filter { (it.matchStats.stats as ParticipantStats).winPlace <= 10 }
             }
     }
 
