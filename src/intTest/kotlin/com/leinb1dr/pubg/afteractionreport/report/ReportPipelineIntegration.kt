@@ -54,7 +54,7 @@ class ReportPipelineIntegration(
         val reportStats = runBlocking { reportPipeline.generateAndSend().collectList().awaitSingle() }
 
         assertEquals(1, reportStats.size)
-        assertEquals("Place", reportStats[0].embeds[0].fields[2].name)
+        assertEquals("V0ltexon", reportStats[0].embeds[0].fields[0].name)
     }
 
 }

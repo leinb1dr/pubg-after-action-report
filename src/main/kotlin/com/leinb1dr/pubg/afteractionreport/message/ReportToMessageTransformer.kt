@@ -6,7 +6,6 @@ import reactor.core.publisher.Mono
 import kotlin.reflect.full.memberProperties
 
 private val labels: Map<String, String> = mapOf(
-    Pair("name", "Name"),
     Pair("deathType", "Death"),
     Pair("winPlace", "Place"),
     Pair("kills", "Kills"),
@@ -33,18 +32,27 @@ val order: List<String> = labels.entries.map { it.value }
 fun Mono<Report>.reportToMessageTransformer(): Mono<DiscordMessage> {
 
     return this.map { report ->
-        val fields = mutableListOf<MessageFields>()
+//        val fields = mutableListOf<MessageFields>()
+        val playerStats = mutableListOf<Pair<String, String>>()
         val reportFieldProperties = ReportFields::class.memberProperties
         for (property in reportFieldProperties) {
-            val statName: String = labels[property.name] ?: "Missing label"
-
-            when (val statVal = property.get(report.fields)) {
-                is Number -> if (statVal.toInt() >= 0) fields.add(MessageFields(statName, ("$statVal")))
-                else -> fields.add(MessageFields(statName, ("$statVal")))
+            labels[property.name]?.apply {
+                when (val statVal = property.get(report.fields)) {
+                    is Number -> if (statVal.toInt() >= 0) playerStats.add(Pair("***$this***", "$statVal"))
+                    else -> playerStats.add(Pair("***$this***", "$statVal"))
+                }
             }
         }
 
-        fields.sortWith { o1, o2 -> order.indexOf(o1.name).compareTo(order.indexOf(o2.name)) }
+        playerStats.sortWith { o1, o2 -> order.indexOf(o1.first).compareTo(order.indexOf(o2.first)) }
+        val playerStatsString = playerStats.map { "${it.first}: ${it.second}" }
+
+        val fields = mutableListOf<MessageFields>()
+        fields.add(
+            MessageFields(
+                report.playerName,
+                playerStatsString.joinToString("\n"))
+        )
 
         return@map DiscordMessage(
             arrayOf(

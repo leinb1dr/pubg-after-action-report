@@ -39,5 +39,5 @@ data class ReportFields(
 )
 
 data class AnnotatedField<T>(val value: T, val annotation: ReportAnnotation) {
-    override fun toString(): String = "$value ${annotation.emoji}".trim()
+    override fun toString(): String = "$value".trim()
 }
