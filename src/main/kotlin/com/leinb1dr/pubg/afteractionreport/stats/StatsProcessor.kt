@@ -3,7 +3,7 @@ package com.leinb1dr.pubg.afteractionreport.stats
 import com.leinb1dr.pubg.afteractionreport.core.MatchAttributes
 import com.leinb1dr.pubg.afteractionreport.core.ParticipantStats
 import com.leinb1dr.pubg.afteractionreport.match.MatchDetailsService
-import com.leinb1dr.pubg.afteractionreport.match.RawReportStats
+import com.leinb1dr.pubg.afteractionreport.report.RawReportStats
 import com.leinb1dr.pubg.afteractionreport.player.PlayerMatch
 import com.leinb1dr.pubg.afteractionreport.player.PlayerSeasonService
 import com.leinb1dr.pubg.afteractionreport.seasons.SeasonService

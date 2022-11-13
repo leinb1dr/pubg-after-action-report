@@ -1,5 +1,7 @@
 package com.leinb1dr.pubg.afteractionreport.report
 
+import com.leinb1dr.pubg.afteractionreport.event.NewMatchCollector
+import com.leinb1dr.pubg.afteractionreport.event.RosterLookup
 import com.leinb1dr.pubg.afteractionreport.message.MessageProcessor
 import com.leinb1dr.pubg.afteractionreport.player.PlayerProcessor
 import com.leinb1dr.pubg.afteractionreport.stats.StatsProcessor
@@ -12,7 +14,9 @@ class ReportPipeline(
     @Autowired val playerProcessor: PlayerProcessor,
     @Autowired val statsProcessor: StatsProcessor,
     @Autowired val reportProcessor: ReportProcessor,
-    @Autowired val messageProcessor: MessageProcessor
+    @Autowired val messageProcessor: MessageProcessor,
+    @Autowired val newMatchCollector: NewMatchCollector,
+    @Autowired val rosterLookup: RosterLookup
 ) {
 
     private val logger = LoggerFactory.getLogger(ReportPipeline::class.java)
@@ -20,6 +24,8 @@ class ReportPipeline(
     //todo update the latest match for the user
     fun generateAndSend() =
         playerProcessor.findAll()
+            .doOnNext { newMatchCollector.lookupMatch(it.matchId) }
+            .doOnNext { rosterLookup.addPlayerMatchToProcess(it) }
             .doOnNext { logger.debug("Looing up match results for $it") }
             .doOnComplete { logger.debug("Found all users for batch") }
             .flatMap(statsProcessor::collectStats)

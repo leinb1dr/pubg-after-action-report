@@ -61,19 +61,28 @@ data class MatchAttributes(
 data class ParticipantAttributes(
     val stats: ParticipantStats,
     override val shardId: String
-): PubgAttributes()
+) : PubgAttributes()
+
+data class RosterAttributes(
+    val stats: RosterStats,
+    val won: Boolean,
+    override val shardId: String
+) : PubgAttributes()
 
 class PubgAttributeDeserializer : StdDeserializer<PubgAttributes>(PubgAttributes::class.java) {
 
     override fun deserialize(p: JsonParser?, ctxt: DeserializationContext?): PubgAttributes {
         val tree = p!!.codec.readTree<JsonNode>(p)
-        if(tree.has("gameModeStats")) return p.codec.treeToValue(tree, PlayerSeasonAttributes::class.java)
-        if(tree.has("isCurrentSeason")) return p.codec.treeToValue(tree, SeasonAttributes::class.java)
-        if(tree.has("URL")) return p.codec.treeToValue(tree, TelemetryAttributes::class.java)
-        if(tree.has("name")) return p.codec.treeToValue(tree, PlayerAttributes::class.java)
-        if(tree.has("mapName")) return p.codec.treeToValue(tree, MatchAttributes::class.java)
-        if(tree.has("stats")) return p.codec.treeToValue(tree, ParticipantAttributes::class.java)
-        return p.codec.treeToValue(tree, UnknownAttributes::class.java)
+        return when {
+            tree.has("gameModeStats") -> p.codec.treeToValue(tree, PlayerSeasonAttributes::class.java)
+            tree.has("isCurrentSeason") -> p.codec.treeToValue(tree, SeasonAttributes::class.java)
+            tree.has("URL") -> p.codec.treeToValue(tree, TelemetryAttributes::class.java)
+            tree.has("name") -> p.codec.treeToValue(tree, PlayerAttributes::class.java)
+            tree.has("mapName") -> p.codec.treeToValue(tree, MatchAttributes::class.java)
+            tree.has("stats") && tree["stats"].has("rank") -> p.codec.treeToValue(tree, RosterAttributes::class.java)
+            tree.has("stats") && tree["stats"].has("assists") -> p.codec.treeToValue(tree, ParticipantAttributes::class.java)
+            else -> p.codec.treeToValue(tree, UnknownAttributes::class.java)
+        }
 
     }
 

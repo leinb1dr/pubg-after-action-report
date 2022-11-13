@@ -4,7 +4,6 @@ import com.leinb1dr.pubg.afteractionreport.core.AbstractStats
 import com.leinb1dr.pubg.afteractionreport.core.MatchAttributes
 import com.leinb1dr.pubg.afteractionreport.core.ParticipantStats
 import com.leinb1dr.pubg.afteractionreport.core.SeasonStats
-import com.leinb1dr.pubg.afteractionreport.match.RawReportStats
 import com.leinb1dr.pubg.afteractionreport.message.DiscordMessage
 import com.leinb1dr.pubg.afteractionreport.message.MessageEmbed
 import com.leinb1dr.pubg.afteractionreport.message.MessageFields
