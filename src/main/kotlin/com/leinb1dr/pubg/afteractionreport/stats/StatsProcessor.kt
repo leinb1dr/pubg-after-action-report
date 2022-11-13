@@ -30,5 +30,18 @@ class StatsProcessor(
             }
     }
 
+    fun collectStatsFromDB(playerMatch: PlayerMatch): Mono<RawReportStats> {
+        val matchStatsMono = matchDetailsService.getMatchDetailsForPlayer(playerMatch)
+        return seasonsService.getCurrentSeason().zipWith(matchStatsMono)
+            .flatMap { matchAndSeason ->
+                playerSeasonService.getPlayerSeasonStats(
+                    playerMatch,
+                    matchAndSeason.t1.id,
+                    (matchAndSeason.t2.attributes as MatchAttributes).gameMode
+                ).map { RawReportStats(playerMatch, matchAndSeason.t2, it) }
+                    .filter { (it.matchStats.stats as ParticipantStats).winPlace <= 10 }
+            }
+    }
+
 
 }

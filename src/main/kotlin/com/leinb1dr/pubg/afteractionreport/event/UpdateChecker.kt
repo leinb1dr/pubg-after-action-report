@@ -32,7 +32,7 @@ class UpdateChecker(@Autowired private val engine: ReportPipeline, @Autowired va
         test.connect()
     }
 
-    @Scheduled(fixedRate = 5, timeUnit = TimeUnit.MINUTES)
+    @Scheduled(fixedRate = 30, timeUnit = TimeUnit.SECONDS)
     fun scheduleFixedRateTask() {
         sink.tryEmitNext(System.currentTimeMillis())
     }

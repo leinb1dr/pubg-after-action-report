@@ -2,10 +2,11 @@ package com.leinb1dr.pubg.afteractionreport.message
 
 import com.leinb1dr.pubg.afteractionreport.report.Report
 import com.leinb1dr.pubg.afteractionreport.report.ReportFields
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import kotlin.reflect.full.memberProperties
 
-fun Mono<Report>.reportToMessageTransformer(): Mono<DiscordMessage> {
+fun Flux<Report>.reportToMessageTransformer(): Flux<DiscordMessage> {
 
     return this.map { report ->
 //        val fields = mutableListOf<MessageFields>()

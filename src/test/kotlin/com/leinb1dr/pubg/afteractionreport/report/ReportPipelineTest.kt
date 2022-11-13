@@ -66,7 +66,7 @@ class ReportPipelineTest {
                 Mono.just(rawReport)
 
         val report = Report("", "", fields = mockkClass(ReportFields::class))
-        every { reportProcessor.transformReport(rawReport) } returns Mono.just(report)
+        every { reportProcessor.transformReport(rawReport, match) } returns Mono.just(report)
 
         val discordMessage = DiscordMessage(
             arrayOf(

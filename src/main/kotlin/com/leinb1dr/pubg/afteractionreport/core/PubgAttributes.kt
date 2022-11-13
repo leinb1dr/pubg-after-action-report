@@ -19,6 +19,28 @@ enum class GameMode(val label: String) {
     }
 }
 
+enum class PubgMap(val key: String, val label: String) {
+    ERANGLE_RM("Baltic_Main", "Erangel (Remastered)"),
+    PARAMO("Chimera_Main", "Paramo"),
+    MIRAMAR("Desert_Main", "Miramar"),
+    VIKENDI("DihorOtok_Main", "Vikendi"),
+    ERANGLE("Erangel_Main", "Erangel"),
+    HAVEN("Heaven_Main", "Haven"),
+    DESTON("Kiki_Main", "Deston"),
+    JACKAL("Range_Main", "Camp Jackal"),
+    SANHOK("Savage_Main", "Sanhok"),
+    KARAKIN("Summerland_Main", "Karakin"),
+    TAEGO("Tiger_Main", "Taego"),
+    NONE("none","none");
+
+    companion object {
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        @JvmStatic
+        fun fromKey(key: String): PubgMap =
+            values().firstOrNull { it.key == key } ?: NONE
+    }
+}
+
 abstract class PubgAttributes {
     abstract val shardId: String?
 }
@@ -50,7 +72,7 @@ data class MatchAttributes(
     val createdAt: OffsetDateTime = OffsetDateTime.now(),
     val duration: Int = 0,
     val gameMode: GameMode = GameMode.NONE,
-    val mapName: String = "none",
+    val mapName: PubgMap = PubgMap.NONE,
     val isCustomMatch: Boolean = false,
     val matchType: String = "none",
     val seasonState: String = "none",
@@ -80,7 +102,10 @@ class PubgAttributeDeserializer : StdDeserializer<PubgAttributes>(PubgAttributes
             tree.has("name") -> p.codec.treeToValue(tree, PlayerAttributes::class.java)
             tree.has("mapName") -> p.codec.treeToValue(tree, MatchAttributes::class.java)
             tree.has("stats") && tree["stats"].has("rank") -> p.codec.treeToValue(tree, RosterAttributes::class.java)
-            tree.has("stats") && tree["stats"].has("assists") -> p.codec.treeToValue(tree, ParticipantAttributes::class.java)
+            tree.has("stats") && tree["stats"].has("assists") -> p.codec.treeToValue(
+                tree,
+                ParticipantAttributes::class.java
+            )
             else -> p.codec.treeToValue(tree, UnknownAttributes::class.java)
         }
 

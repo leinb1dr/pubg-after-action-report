@@ -40,7 +40,7 @@ class ReportProcessorTest {
 
     @Test
     fun `Default transform behavior`() {
-        val report = runBlocking { reportProcessor.transformReport(rawReport).awaitSingle() }
+        val report = runBlocking { reportProcessor.transformReport(rawReport, match).awaitSingle() }
 
         assertEquals(0, report.fields.kills.value)
         assertEquals(ReportAnnotation.EVEN, report.fields.kills.annotation)
@@ -50,7 +50,7 @@ class ReportProcessorTest {
 
     @Test
     fun `Above annotation transform behavior`() {
-        val report = runBlocking { reportProcessor.transformReport(rawReport).awaitSingle() }
+        val report = runBlocking { reportProcessor.transformReport(rawReport, match).awaitSingle() }
 
         assertEquals(2, report.fields.assists.value)
         assertEquals(ReportAnnotation.ABOVE, report.fields.assists.annotation)
@@ -58,7 +58,7 @@ class ReportProcessorTest {
 
     @Test
     fun `Below annotation transform behavior`() {
-        val report = runBlocking { reportProcessor.transformReport(rawReport).awaitSingle() }
+        val report = runBlocking { reportProcessor.transformReport(rawReport, match).awaitSingle() }
 
         assertEquals(1, report.fields.DBNOs.value)
         assertEquals(ReportAnnotation.BELOW, report.fields.DBNOs.annotation)
@@ -66,14 +66,14 @@ class ReportProcessorTest {
 
     @Test
     fun `Interesting stat transform behavior`() {
-        val report = runBlocking { reportProcessor.transformReport(rawReport).awaitSingle() }
+        val report = runBlocking { reportProcessor.transformReport(rawReport, match).awaitSingle() }
 
         assertEquals(2, report.fields.revives)
     }
 
     @Test
     fun `Test with real numbers transform behavior`() {
-        val report = runBlocking { reportProcessor.transformReport(rawReportBiggerNumbers).awaitSingle() }
+        val report = runBlocking { reportProcessor.transformReport(rawReportBiggerNumbers, match).awaitSingle() }
 
         assertEquals(1, report.fields.DBNOs.value)
         assertEquals(ReportAnnotation.BELOW, report.fields.DBNOs.annotation)

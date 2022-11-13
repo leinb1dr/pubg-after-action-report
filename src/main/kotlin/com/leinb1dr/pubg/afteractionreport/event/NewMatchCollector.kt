@@ -2,6 +2,7 @@ package com.leinb1dr.pubg.afteractionreport.event
 
 import com.google.common.cache.CacheBuilder
 import com.leinb1dr.pubg.afteractionreport.match.MatchDetailsService
+import com.leinb1dr.pubg.afteractionreport.match.MatchProcessor
 import com.leinb1dr.pubg.afteractionreport.match.MatchStorageService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,8 +13,7 @@ import javax.annotation.PostConstruct
 
 @Service
 class NewMatchCollector(
-    @Autowired val matchStorageService: MatchStorageService,
-    @Autowired val matchDetailsService: MatchDetailsService
+    @Autowired private val matchProcessor: MatchProcessor
 ) {
 
     private val sink = Sinks.many().replay().latest<String>()
@@ -25,17 +25,7 @@ class NewMatchCollector(
         val test = sink.asFlux()
             .publish()
         test
-            .filter { cache.getIfPresent(it) == null }
-            .doOnNext { cache.put(it, it) }
-            .doOnNext { logger.debug("Match not recently processed: $it") }
-            .flatMap { matchId ->
-                matchStorageService.matchExists(matchId)
-                    .doOnNext { logger.info("Match[$matchId] found: $it") }
-                    .filter { !it }.map { matchId }
-            }
-            .doOnNext { logger.debug("Match[$it] not stored in db") }
-            .flatMap(matchDetailsService::getMatch)
-            .flatMap(matchStorageService::storeMatch)
+            .flatMap(matchProcessor::process)
             .subscribe { logger.info("Saved Match to database $it") }
         test.connect()
     }

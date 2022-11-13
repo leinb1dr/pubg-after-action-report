@@ -17,7 +17,6 @@ class MessagePublisher(
 
     private val sink = Sinks.many().replay().latest<TeamReport>()
     private val logger = LoggerFactory.getLogger(MessagePublisher::class.java)
-    private val cache = CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.MINUTES).build<String, String>()
 
     @PostConstruct
     fun register() {

@@ -18,6 +18,8 @@ interface Stats {
 
     }
 
+    data class DefaultStats(override val attributes: MatchAttributes?=null, override val stats: AbstractStats) : Stats
+
     private class StatsFromMatch(pubgWrapper: PubgWrapper, playerMatch: PlayerMatch) : Stats {
         override val attributes = pubgWrapper.data!![0].attributes!! as MatchAttributes
         override val stats: AbstractStats = pubgWrapper.included!!.filter { it.type == "participant" }

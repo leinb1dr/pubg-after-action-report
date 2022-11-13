@@ -11,16 +11,18 @@ import reactor.core.publisher.Mono
 class MessageProcessor(@Autowired val messageService: MessageService) {
 
     fun sendMessage(report: Report): Mono<DiscordMessage> = Flux.just(report)
-        .reportToMessageEmbedTransformer()
+        .reportToMessageFieldTransformer()
         .collectList()
-        .mapToDiscordMessage()
+        .mapToDiscordMessage(report)
         .flatMap { messageService.postMessage(it) }
 
     fun sendMessage(report: TeamReport): Mono<DiscordMessage> = Mono.just(report)
-        .flatMapMany { Flux.fromIterable(report.reports) }
-        .reportToMessageEmbedTransformer()
-        .collectList()
-        .mapToDiscordMessage()
+        .flatMap { teamReport ->
+            Flux.fromIterable(report.reports)
+                .reportToMessageFieldTransformer()
+                .collectList()
+                .mapToDiscordMessage(teamReport)
+        }
         .flatMap { messageService.postMessage(it) }
 
 

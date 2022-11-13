@@ -1,7 +1,9 @@
 package com.leinb1dr.pubg.afteractionreport.report
 
+import com.leinb1dr.pubg.afteractionreport.core.PubgMap
+
 data class Report(
-    val map: String,
+    val map: PubgMap,
     val time: String,
     val playerName: String = "#PlayerUnknown",
     val fields: ReportFields,
@@ -21,9 +23,10 @@ data class ReportFields(
     val name: String = "#PlayerUnknown",
     val kills: AnnotatedField<Int>,
     val winPlace: Int,
+    val killPlace: Int,
+    val timeSurvived: Double,
     val heals: Int,
     val revives: Int,
-//    val killPlace: Int,
     val killStreaks: Int,
     val longestKill: Double,
 //    val playerId: String = "#PlayerUnknown",
@@ -31,7 +34,6 @@ data class ReportFields(
     val roadKills: Int,
     val swimDistance: Double,
     val teamKills: Int,
-    val timeSurvived: Int,
     val vehicleDestroys: Int,
     val walkDistance: Double,
     val weaponsAcquired: Int,
@@ -39,5 +41,9 @@ data class ReportFields(
 )
 
 data class AnnotatedField<T>(val value: T, val annotation: ReportAnnotation) {
-    override fun toString(): String = "$value".trim()
+    override fun toString(): String =
+        when(value){
+            is Double -> String.format("%.2f", value)
+                else -> "$value"
+        }
 }
