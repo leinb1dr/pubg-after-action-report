@@ -1,5 +1,6 @@
 package com.leinb1dr.pubg.afteractionreport.player
 
+import com.leinb1dr.pubg.afteractionreport.player.match.PlayerProcessor
 import com.leinb1dr.pubg.afteractionreport.user.User
 import com.leinb1dr.pubg.afteractionreport.user.UserRepository
 import io.mockk.every

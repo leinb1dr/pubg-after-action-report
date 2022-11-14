@@ -3,12 +3,11 @@ package com.leinb1dr.pubg.afteractionreport.stats
 import com.leinb1dr.pubg.afteractionreport.core.*
 import com.leinb1dr.pubg.afteractionreport.match.Match
 import com.leinb1dr.pubg.afteractionreport.match.MatchProcessor
-import com.leinb1dr.pubg.afteractionreport.player.PlayerMatch
-import com.leinb1dr.pubg.afteractionreport.player.PlayerSeasonService
+import com.leinb1dr.pubg.afteractionreport.player.match.PlayerMatch
+import com.leinb1dr.pubg.afteractionreport.player.season.PlayerSeasonService
 import com.leinb1dr.pubg.afteractionreport.report.ReportProcessor
 import com.leinb1dr.pubg.afteractionreport.seasons.CurrentSeason
 import com.leinb1dr.pubg.afteractionreport.seasons.CurrentSeasonService
-import com.mongodb.assertions.Assertions
 import com.mongodb.assertions.Assertions.assertTrue
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs

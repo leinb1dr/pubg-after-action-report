@@ -1,7 +1,7 @@
 package com.leinb1dr.pubg.afteractionreport.stats
 
 import com.leinb1dr.pubg.afteractionreport.core.*
-import com.leinb1dr.pubg.afteractionreport.player.PlayerMatch
+import com.leinb1dr.pubg.afteractionreport.player.match.PlayerMatch
 import java.io.InvalidClassException
 
 interface Stats {
@@ -16,9 +16,11 @@ interface Stats {
                 else -> throw InvalidClassException("Unknown type to construct Stats")
             }
 
+        fun create(stats: SeasonStats): Stats = DefaultStats(stats = stats)
+
     }
 
-    data class DefaultStats(override val attributes: MatchAttributes?=null, override val stats: AbstractStats) : Stats
+    data class DefaultStats(override val attributes: MatchAttributes? = null, override val stats: AbstractStats) : Stats
 
     private class StatsFromMatch(pubgWrapper: PubgWrapper, playerMatch: PlayerMatch) : Stats {
         override val attributes = pubgWrapper.data!![0].attributes!! as MatchAttributes

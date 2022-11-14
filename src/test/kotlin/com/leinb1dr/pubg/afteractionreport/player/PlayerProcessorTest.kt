@@ -1,5 +1,9 @@
 package com.leinb1dr.pubg.afteractionreport.player
 
+import com.leinb1dr.pubg.afteractionreport.player.match.PlayerDetailsService
+import com.leinb1dr.pubg.afteractionreport.player.match.PlayerMatch
+import com.leinb1dr.pubg.afteractionreport.player.match.PlayerMatchService
+import com.leinb1dr.pubg.afteractionreport.player.match.PlayerProcessor
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK

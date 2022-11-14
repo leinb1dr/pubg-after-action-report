@@ -1,7 +1,7 @@
 package com.leinb1dr.pubg.afteractionreport.match
 
 import com.google.common.cache.CacheBuilder
-import com.leinb1dr.pubg.afteractionreport.player.PlayerMatch
+import com.leinb1dr.pubg.afteractionreport.player.match.PlayerMatch
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

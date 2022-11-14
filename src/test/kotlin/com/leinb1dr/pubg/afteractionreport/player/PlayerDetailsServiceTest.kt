@@ -2,6 +2,8 @@ package com.leinb1dr.pubg.afteractionreport.player
 
 import com.leinb1dr.pubg.afteractionreport.core.PubgData
 import com.leinb1dr.pubg.afteractionreport.core.PubgWrapper
+import com.leinb1dr.pubg.afteractionreport.player.match.PlayerDetailsService
+import com.leinb1dr.pubg.afteractionreport.player.match.PlayerMatch
 import com.leinb1dr.pubg.afteractionreport.util.SetupWebClientMock
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -10,7 +12,6 @@ import io.mockk.junit5.MockKExtension
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith

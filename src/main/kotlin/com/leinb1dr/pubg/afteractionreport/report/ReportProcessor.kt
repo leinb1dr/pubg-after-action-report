@@ -1,9 +1,7 @@
 package com.leinb1dr.pubg.afteractionreport.report
 
 import com.leinb1dr.pubg.afteractionreport.core.ParticipantStats
-import com.leinb1dr.pubg.afteractionreport.core.PubgData
 import com.leinb1dr.pubg.afteractionreport.core.SeasonStats
-import com.leinb1dr.pubg.afteractionreport.match.Match
 import com.leinb1dr.pubg.afteractionreport.stats.StatsProcessorContext
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
@@ -48,18 +46,18 @@ class ReportProcessor {
                 ),
                 matchStats.winPlace,
                 matchStats.killPlace,
-                matchStats.timeSurvived/60.0,
-                isInteresting(matchStats.heals, seasonStats.heals),
-                isInteresting(matchStats.revives, seasonStats.revives),
-                isInteresting(matchStats.killStreaks, seasonStats.maxKillStreaks),
-                isInteresting(matchStats.longestKill, seasonStats.longestKill),
-                isInteresting(matchStats.rideDistance, seasonStats.rideDistance),
-                isInteresting(matchStats.roadKills, seasonStats.roadKills),
-                isInteresting(matchStats.swimDistance, seasonStats.swimDistance),
-                isInteresting(matchStats.teamKills, seasonStats.teamKills),
-                isInteresting(matchStats.vehicleDestroys, seasonStats.vehicleDestroys),
-                isInteresting(matchStats.walkDistance, seasonStats.walkDistance),
-                isInteresting(matchStats.weaponsAcquired, seasonStats.weaponsAcquired)
+                matchStats.timeSurvived / 60.0,
+                isInteresting(matchStats.heals, seasonStats.heals/seasonStats.roundsPlayed),
+                isInteresting(matchStats.revives, seasonStats.revives/seasonStats.roundsPlayed),
+                isInteresting(matchStats.killStreaks, seasonStats.maxKillStreaks/seasonStats.roundsPlayed),
+                isInteresting(matchStats.longestKill, seasonStats.longestKill/seasonStats.roundsPlayed),
+                isInteresting(matchStats.rideDistance, seasonStats.rideDistance/seasonStats.roundsPlayed),
+                isInteresting(matchStats.roadKills, seasonStats.roadKills/seasonStats.roundsPlayed),
+                isInteresting(matchStats.swimDistance, seasonStats.swimDistance/seasonStats.roundsPlayed),
+                isInteresting(matchStats.teamKills, seasonStats.teamKills/seasonStats.roundsPlayed),
+                isInteresting(matchStats.vehicleDestroys, seasonStats.vehicleDestroys/seasonStats.roundsPlayed),
+                isInteresting(matchStats.walkDistance, seasonStats.walkDistance/seasonStats.roundsPlayed),
+                isInteresting(matchStats.weaponsAcquired, seasonStats.weaponsAcquired/seasonStats.roundsPlayed)
             )
 
             statsProcessorContext.report = Report(
@@ -99,14 +97,12 @@ class ReportProcessor {
 
 
     private fun isInteresting(matchStat: Int, seasonStat: Int): Int {
-        val upper = seasonStat * 1.25
-        if (matchStat > 0 && matchStat >= upper) return matchStat
+        if (seasonStat > 0 && matchStat > 0 && matchStat > seasonStat) return matchStat
         return -1
     }
 
     private fun isInteresting(matchStat: Double, seasonStat: Double): Double {
-        val upper = seasonStat * 1.25
-        if (matchStat >0 && matchStat >= upper) return matchStat
+        if (seasonStat > 0.0 && matchStat > 0.0 && matchStat >= seasonStat) return matchStat
         return -1.0
     }
 

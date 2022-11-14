@@ -1,4 +1,4 @@
-package com.leinb1dr.pubg.afteractionreport.player
+package com.leinb1dr.pubg.afteractionreport.player.match
 
 import com.leinb1dr.pubg.afteractionreport.user.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -8,7 +8,7 @@ import reactor.core.publisher.Mono
 
 @Service
 class PlayerMatchService(@Autowired private val userRepository: UserRepository) {
-    fun getProcessedPlayerMatches(): Flux<PlayerMatch> = userRepository.findAll().map(PlayerMatch::create)
+    fun getProcessedPlayerMatches(): Flux<PlayerMatch> = userRepository.findAll().map(PlayerMatch.Factory::create)
     fun updatePlayerMatch(pubgId: String, matchId: String): Mono<Long> =
         userRepository.findAndSetMatchIdByPubgId(pubgId, matchId)
 }

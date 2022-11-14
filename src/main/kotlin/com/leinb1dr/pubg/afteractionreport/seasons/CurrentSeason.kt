@@ -8,5 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document
 data class CurrentSeason(
     @Id
     val id: ObjectId = ObjectId.get(),
-    val season: String
+    val season: String,
+    val current:Boolean = true
 )

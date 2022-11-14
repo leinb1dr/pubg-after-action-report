@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.leinb1dr.pubg.afteractionreport.core.PubgWrapper
 import com.leinb1dr.pubg.afteractionreport.match.Match
 import com.leinb1dr.pubg.afteractionreport.match.MatchRepository
-import com.leinb1dr.pubg.afteractionreport.player.PlayerMatch
+import com.leinb1dr.pubg.afteractionreport.player.match.PlayerMatch
 import com.leinb1dr.pubg.afteractionreport.seasons.CurrentSeason
 import com.leinb1dr.pubg.afteractionreport.seasons.CurrentSeasonRepository
 import io.mockk.every

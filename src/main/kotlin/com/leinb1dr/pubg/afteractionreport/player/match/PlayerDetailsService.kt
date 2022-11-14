@@ -1,4 +1,4 @@
-package com.leinb1dr.pubg.afteractionreport.player
+package com.leinb1dr.pubg.afteractionreport.player.match
 
 import com.leinb1dr.pubg.afteractionreport.core.PubgWrapper
 import org.slf4j.LoggerFactory
@@ -17,7 +17,7 @@ class PlayerDetailsService(@Autowired @Qualifier("pubgClient") private val clien
 
     fun getLatestPlayerMatches(pubgIds: List<String>): Flux<PlayerMatch> {
         return findPlayersByIds(pubgIds).flatMapMany { Flux.fromArray(it.data!!) }
-            .map(PlayerMatch::create)
+            .map(PlayerMatch.Factory::create)
     }
 
     fun findPlayersByIds(pubgIds: List<String>): Mono<PubgWrapper> {

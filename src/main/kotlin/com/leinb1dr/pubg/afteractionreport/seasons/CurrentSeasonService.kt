@@ -8,16 +8,20 @@ import reactor.core.publisher.Mono
 class CurrentSeasonService(@Autowired val repository: CurrentSeasonRepository, @Autowired val ss: SeasonService) {
     fun updateSeason(): Mono<Boolean> = ss.getCurrentSeason()
         .flatMap { currentSeason ->
-            repository.existsBySeason(currentSeason.id).flatMap {
-                when (it) {
-                    false -> repository.save(CurrentSeason(season = currentSeason.id))
+            repository.existsBySeason(currentSeason.id).flatMap { exists ->
+                when (exists) {
+                    false -> {
+                        repository.findByCurrent(true).flatMap {
+                            repository.save(it.copy(season = currentSeason.id))
+                        }
+                    }
                     true -> Mono.empty()
                 }
             }
         }
         .map { true }
 
-    fun getCurrentSeason() = repository.findAll().collectList().map { it[0] }
+    fun getCurrentSeason() = repository.findByCurrent(true)
 
 
 }

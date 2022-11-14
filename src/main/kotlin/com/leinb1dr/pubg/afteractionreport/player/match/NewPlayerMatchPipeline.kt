@@ -1,4 +1,4 @@
-package com.leinb1dr.pubg.afteractionreport.player
+package com.leinb1dr.pubg.afteractionreport.player.match
 
 import com.leinb1dr.pubg.afteractionreport.match.NewMatchLookupTask
 import com.leinb1dr.pubg.afteractionreport.stats.TeamStatsTask

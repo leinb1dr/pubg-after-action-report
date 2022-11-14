@@ -3,10 +3,9 @@ package com.leinb1dr.pubg.afteractionreport.report
 import com.leinb1dr.pubg.afteractionreport.core.MatchAttributes
 import com.leinb1dr.pubg.afteractionreport.core.ParticipantAttributes
 import com.leinb1dr.pubg.afteractionreport.core.PubgData
-import com.leinb1dr.pubg.afteractionreport.core.SeasonStats
 import com.leinb1dr.pubg.afteractionreport.match.Match
-import com.leinb1dr.pubg.afteractionreport.player.DefaultPlayerMatch
-import com.leinb1dr.pubg.afteractionreport.player.PlayerMatch
+import com.leinb1dr.pubg.afteractionreport.player.match.DefaultPlayerMatch
+import com.leinb1dr.pubg.afteractionreport.player.match.PlayerMatch
 import com.leinb1dr.pubg.afteractionreport.stats.Stats
 
 data class RawReportStats(

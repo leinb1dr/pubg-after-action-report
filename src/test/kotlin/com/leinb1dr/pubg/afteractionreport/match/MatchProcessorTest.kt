@@ -1,7 +1,7 @@
 package com.leinb1dr.pubg.afteractionreport.match
 
 import com.leinb1dr.pubg.afteractionreport.core.PubgWrapper
-import com.leinb1dr.pubg.afteractionreport.player.DefaultPlayerMatch
+import com.leinb1dr.pubg.afteractionreport.player.match.DefaultPlayerMatch
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK

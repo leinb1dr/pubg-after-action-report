@@ -1,4 +1,4 @@
-package com.leinb1dr.pubg.afteractionreport.player
+package com.leinb1dr.pubg.afteractionreport.player.match
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

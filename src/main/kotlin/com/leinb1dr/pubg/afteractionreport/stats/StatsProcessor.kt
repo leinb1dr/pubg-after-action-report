@@ -6,13 +6,11 @@ import com.leinb1dr.pubg.afteractionreport.core.ParticipantAttributes
 import com.leinb1dr.pubg.afteractionreport.core.PubgData
 import com.leinb1dr.pubg.afteractionreport.match.Match
 import com.leinb1dr.pubg.afteractionreport.match.MatchProcessor
-import com.leinb1dr.pubg.afteractionreport.player.DefaultPlayerMatch
-import com.leinb1dr.pubg.afteractionreport.player.PlayerMatch
-import com.leinb1dr.pubg.afteractionreport.player.PlayerSeasonService
+import com.leinb1dr.pubg.afteractionreport.player.match.PlayerMatch
+import com.leinb1dr.pubg.afteractionreport.player.season.PlayerSeasonStorageService
 import com.leinb1dr.pubg.afteractionreport.report.RawReportStats
 import com.leinb1dr.pubg.afteractionreport.report.ReportProcessor
 import com.leinb1dr.pubg.afteractionreport.report.TeamReport
-import com.leinb1dr.pubg.afteractionreport.seasons.CurrentSeasonService
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.internal.synchronized
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,8 +22,7 @@ import java.util.concurrent.TimeUnit
 @Service
 class StatsProcessor(
     @Autowired val matchProcessor: MatchProcessor,
-    @Autowired val playerSeasonService: PlayerSeasonService,
-    @Autowired val currentSeasonService: CurrentSeasonService,
+    @Autowired val playerSeasonStorageService: PlayerSeasonStorageService,
     @Autowired val reportProcessor: ReportProcessor
 ) {
     private val cache = CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.MINUTES).build<String, String>()
@@ -54,17 +51,11 @@ class StatsProcessor(
 
     private fun Flux<StatsProcessorContext>.gatherSeasonStatsForParticipants(): Flux<StatsProcessorContext> =
         this.flatMap { context ->
-            currentSeasonService.getCurrentSeason()
-                .flatMap { season ->
-                    playerSeasonService.getPlayerSeasonStats(
-                        DefaultPlayerMatch(
-                            (context.participant!!.attributes as ParticipantAttributes).stats.playerId,
-                            context.match!!.matchId
-                        ),
-                        season.season,
-                        (context.match!!.data.data!![0].attributes as MatchAttributes).gameMode
-                    )
-                }
+            playerSeasonStorageService.getSeasonStats(
+                (context.participant!!.attributes as ParticipantAttributes).stats.playerId,
+                (context.match!!.data.data!![0].attributes as MatchAttributes).gameMode
+            )
+                .map { Stats.create(it.stats) }
                 .map { RawReportStats(context.participant!!, context.match!!, it) }
                 .map {
                     context.rawReportStats = it
@@ -73,36 +64,37 @@ class StatsProcessor(
         }
 
     @OptIn(InternalCoroutinesApi::class)
-    private fun Mono<Match>.extractRoster(playerMatch: PlayerMatch): Mono<StatsProcessorContext> = this.flatMap { match ->
-        Mono
-            .just(match.data.included!!.filter { it.type == "participant" }
-                .filter { (it.attributes as ParticipantAttributes).stats.playerId == playerMatch.pubgId }
-                .map { it.id }
-                .first())
-            .map { participantId ->
-                match.data.included.filter { it.type == "roster" }
-                    .find { rosterData ->
-                        rosterData.relationships!!["participants"]!!.data!!.any { it.id == participantId }
-                    }
-            }
-            .filter {
-                synchronized(cache) {
-                    if (cache.getIfPresent(it!!.id) == null) {
-                        cache.put(it.id, it.id)
-                        return@filter true
-                    }
-                    return@filter false
+    private fun Mono<Match>.extractRoster(playerMatch: PlayerMatch): Mono<StatsProcessorContext> =
+        this.flatMap { match ->
+            Mono
+                .just(match.data.included!!.filter { it.type == "participant" }
+                    .filter { (it.attributes as ParticipantAttributes).stats.playerId == playerMatch.pubgId }
+                    .map { it.id }
+                    .first())
+                .map { participantId ->
+                    match.data.included.filter { it.type == "roster" }
+                        .find { rosterData ->
+                            rosterData.relationships!!["participants"]!!.data!!.any { it.id == participantId }
+                        }
                 }
-            }
-            .doOnNext { cache.put(it!!.id, it.id) }
-            .defaultIfEmpty(PubgData())
-            .map {
-                val context = StatsProcessorContext()
-                context.match = match
-                context.roster = it
-                context
-            }
-    }
+                .filter {
+                    synchronized(cache) {
+                        if (cache.getIfPresent(it!!.id) == null) {
+                            cache.put(it.id, it.id)
+                            return@filter true
+                        }
+                        return@filter false
+                    }
+                }
+                .doOnNext { cache.put(it!!.id, it.id) }
+                .defaultIfEmpty(PubgData())
+                .map {
+                    val context = StatsProcessorContext()
+                    context.match = match
+                    context.roster = it
+                    context
+                }
+        }
 }
 
 

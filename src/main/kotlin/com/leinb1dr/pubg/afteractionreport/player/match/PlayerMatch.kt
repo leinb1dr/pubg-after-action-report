@@ -1,8 +1,7 @@
-package com.leinb1dr.pubg.afteractionreport.player
+package com.leinb1dr.pubg.afteractionreport.player.match
 
 import com.leinb1dr.pubg.afteractionreport.core.PubgData
 import com.leinb1dr.pubg.afteractionreport.user.User
-import org.bson.types.ObjectId
 import java.io.InvalidClassException
 
 interface PlayerMatch {
