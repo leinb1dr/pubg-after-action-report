@@ -37,6 +37,9 @@ spec:
                   name: {{ include "mongo.fullname" . }}-secret
                   key: MONGO_ROOT_PASSWORD
                   optional: false
+          volumeMounts:
+            - name: {{ include "mongo.fullname" . }}-data
+              mountPath: /data
           resources:
             limits:
               cpu: 250m
