@@ -6,6 +6,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.Assertions.assertThrowsExactly
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -31,7 +32,13 @@ class CurrentSeasonServiceTest {
     @Test
     fun `Update Current Season`() {
 
-        every { ss.getCurrentSeason() } returns Mono.just(PubgData(type = "season", id="division.bro.official.2017-pre1"))
+        every { repository.existsBySeason("division.bro.official.2017-pre1") } returns Mono.just(false)
+        every { ss.getCurrentSeason() } returns Mono.just(
+            PubgData(
+                type = "season",
+                id = "division.bro.official.2017-pre1"
+            )
+        )
 
         every { repository.save(match { it.season == "division.bro.official.2017-pre1" }) } returns Mono.just(
             CurrentSeason(season = "division.bro.official.2017-pre1")
@@ -39,5 +46,18 @@ class CurrentSeasonServiceTest {
 
         val pubgResults = runBlocking { css.updateSeason().awaitSingle() }
         assertTrue(pubgResults)
+    }
+
+    @Test
+    fun `Current Season up to date`() {
+        every { ss.getCurrentSeason() } returns Mono.just(
+            PubgData(
+                type = "season",
+                id = "division.bro.official.2017-pre1"
+            )
+        )
+        every { repository.existsBySeason("division.bro.official.2017-pre1") } returns Mono.just(true)
+        assertThrowsExactly(NoSuchElementException::class.java) { runBlocking { css.updateSeason().awaitSingle() } }
+
     }
 }

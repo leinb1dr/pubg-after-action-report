@@ -18,7 +18,7 @@ class MessageServiceIntegration(@Autowired private val ms: MessageService) {
     fun `Post Message`() {
 
         val stats =
-            DiscordMessage(arrayOf(MessageEmbed("Message Int Test", "Verify posting works", mutableListOf(
+            DiscordMessage(listOf(MessageEmbed("Message Int Test", "Verify posting works", mutableListOf(
                 MessageFields("field 1", "value 1")
             ))))
 

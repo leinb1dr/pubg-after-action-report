@@ -1,5 +1,6 @@
 package com.leinb1dr.pubg.afteractionreport.config
 
+import com.leinb1dr.pubg.afteractionreport.match.MatchRepository
 import com.leinb1dr.pubg.afteractionreport.seasons.CurrentSeasonRepository
 import com.leinb1dr.pubg.afteractionreport.user.UserRepository
 import com.mongodb.reactivestreams.client.MongoClient
@@ -16,6 +17,9 @@ class TestConfiguration {
 
     @Bean
     fun registrationRepository() = mockkClass(UserRepository::class)
+
+    @Bean
+    fun matchRepository() = mockkClass(MatchRepository::class)
 
 
     @Bean

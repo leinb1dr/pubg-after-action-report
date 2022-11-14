@@ -1,8 +1,10 @@
 package com.leinb1dr.pubg.afteractionreport.report
 
 import com.leinb1dr.pubg.afteractionreport.core.ParticipantStats
+import com.leinb1dr.pubg.afteractionreport.core.PubgData
 import com.leinb1dr.pubg.afteractionreport.core.SeasonStats
-import com.leinb1dr.pubg.afteractionreport.match.RawReportStats
+import com.leinb1dr.pubg.afteractionreport.match.Match
+import com.leinb1dr.pubg.afteractionreport.stats.StatsProcessorContext
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 import java.time.OffsetDateTime
@@ -12,7 +14,8 @@ import kotlin.math.max
 
 @Service
 class ReportProcessor {
-    fun transformReport(rawReportStats: RawReportStats): Mono<Report> {
+    fun transformReport(statsProcessorContext: StatsProcessorContext): Mono<StatsProcessorContext> {
+        val rawReportStats = statsProcessorContext.rawReportStats!!
         return Mono.just(rawReportStats).map {
             val matchAttributes = it.matchStats.attributes!!
             val matchStats = it.matchStats.stats as ParticipantStats
@@ -44,6 +47,8 @@ class ReportProcessor {
                     setAnnotation(matchStats.kills, seasonStats.kills / roundsPlayed)
                 ),
                 matchStats.winPlace,
+                matchStats.killPlace,
+                matchStats.timeSurvived/60.0,
                 isInteresting(matchStats.heals, seasonStats.heals),
                 isInteresting(matchStats.revives, seasonStats.revives),
                 isInteresting(matchStats.killStreaks, seasonStats.maxKillStreaks),
@@ -52,18 +57,19 @@ class ReportProcessor {
                 isInteresting(matchStats.roadKills, seasonStats.roadKills),
                 isInteresting(matchStats.swimDistance, seasonStats.swimDistance),
                 isInteresting(matchStats.teamKills, seasonStats.teamKills),
-                isInteresting(matchStats.timeSurvived, seasonStats.timeSurvived),
                 isInteresting(matchStats.vehicleDestroys, seasonStats.vehicleDestroys),
                 isInteresting(matchStats.walkDistance, seasonStats.walkDistance),
                 isInteresting(matchStats.weaponsAcquired, seasonStats.weaponsAcquired)
             )
 
-            return@map Report(
-                getMapName(matchAttributes.mapName),
+            statsProcessorContext.report = Report(
+                matchAttributes.mapName,
                 formatMatchTime(matchAttributes.createdAt),
                 matchStats.name,
                 fields
             )
+
+            statsProcessorContext
         }
     }
 
@@ -100,7 +106,7 @@ class ReportProcessor {
 
     private fun isInteresting(matchStat: Double, seasonStat: Double): Double {
         val upper = seasonStat * 1.25
-        if (matchStat >= upper) return matchStat
+        if (matchStat >0 && matchStat >= upper) return matchStat
         return -1.0
     }
 
