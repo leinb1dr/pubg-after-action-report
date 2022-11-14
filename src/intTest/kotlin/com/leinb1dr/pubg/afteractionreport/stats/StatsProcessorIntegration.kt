@@ -1,10 +1,13 @@
 package com.leinb1dr.pubg.afteractionreport.stats
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.leinb1dr.pubg.afteractionreport.core.GameMode
 import com.leinb1dr.pubg.afteractionreport.core.PubgWrapper
 import com.leinb1dr.pubg.afteractionreport.match.Match
 import com.leinb1dr.pubg.afteractionreport.match.MatchRepository
 import com.leinb1dr.pubg.afteractionreport.player.match.PlayerMatch
+import com.leinb1dr.pubg.afteractionreport.player.season.PlayerSeason
+import com.leinb1dr.pubg.afteractionreport.player.season.PlayerSeasonRepository
 import com.leinb1dr.pubg.afteractionreport.seasons.CurrentSeason
 import com.leinb1dr.pubg.afteractionreport.seasons.CurrentSeasonRepository
 import io.mockk.every
@@ -32,6 +35,9 @@ class StatsProcessorIntegration {
     lateinit var currentSeasonRepository: CurrentSeasonRepository
 
     @Autowired
+    lateinit var playerSeasonRepository: PlayerSeasonRepository
+
+    @Autowired
     lateinit var objectMapper: ObjectMapper
 
     @Autowired
@@ -57,7 +63,15 @@ class StatsProcessorIntegration {
                     )
                 )
 
-        every { currentSeasonRepository.findAll() } returns Flux.just(CurrentSeason(season = "division.bro.official.pc-2018-20"))
+        every { playerSeasonRepository.findByPubgIdAndGameMode("account.0bee6c2ee01d44299425625bcb9e7ddb", match{true}) } returns Mono.just(
+            PlayerSeason()
+        )
+        every { playerSeasonRepository.findByPubgIdAndGameMode("account.20cf943715ee46328ac1f5eab89cacca", match{true}) } returns Mono.just(
+            PlayerSeason()
+        )
+        every { playerSeasonRepository.findByPubgIdAndGameMode("account.86f8a9062d1c480a9a5f97ddb2f66280", match{true}) } returns Mono.just(
+            PlayerSeason()
+        )
 
         val reportStats = runBlocking { statsProcessor.collectStats(playerMatch).awaitSingle() }
 

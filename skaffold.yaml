@@ -1,0 +1,13 @@
+---
+apiVersion: skaffold/v2beta28
+kind: Config
+metadata:
+  name: helm-deploy
+build:
+  artifacts:
+    - image: skaffold-helm-image
+deploy:
+  helm:
+    releases:
+    - name: poc
+      chartPath: charts/after-action-report

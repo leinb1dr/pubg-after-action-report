@@ -1,10 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+	id("idea")
 	id("org.springframework.boot") version "2.7.5"
 	id("io.spring.dependency-management") version "1.0.14.RELEASE"
 	kotlin("jvm") version "1.7.21"
 	kotlin("plugin.spring") version "1.7.21"
+
 }
 
 group = "com.leinb1dr.pub"
@@ -25,6 +27,14 @@ sourceSets {
 
 		}
 	}
+}
+
+apply(plugin="idea")
+
+idea.module {
+	testSourceDirs.addAll(project.sourceSets["intTest"].kotlin.srcDirs)
+	testResourceDirs.addAll(project.sourceSets["intTest"].resources.srcDirs)
+
 }
 
 val intTestImplementation by configurations.getting {

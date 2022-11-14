@@ -39,6 +39,7 @@ class CurrentSeasonServiceTest {
                 id = "division.bro.official.2017-pre1"
             )
         )
+        every { repository.findByCurrent(true) } returns Mono.just(CurrentSeason(season = ""))
 
         every { repository.save(match { it.season == "division.bro.official.2017-pre1" }) } returns Mono.just(
             CurrentSeason(season = "division.bro.official.2017-pre1")
@@ -56,6 +57,7 @@ class CurrentSeasonServiceTest {
                 id = "division.bro.official.2017-pre1"
             )
         )
+
         every { repository.existsBySeason("division.bro.official.2017-pre1") } returns Mono.just(true)
         assertThrowsExactly(NoSuchElementException::class.java) { runBlocking { css.updateSeason().awaitSingle() } }
 

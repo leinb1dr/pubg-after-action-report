@@ -11,9 +11,11 @@ class CurrentSeasonService(@Autowired val repository: CurrentSeasonRepository, @
             repository.existsBySeason(currentSeason.id).flatMap { exists ->
                 when (exists) {
                     false -> {
-                        repository.findByCurrent(true).flatMap {
-                            repository.save(it.copy(season = currentSeason.id))
-                        }
+                        repository.findByCurrent(true)
+                            .defaultIfEmpty(CurrentSeason(season = ""))
+                            .flatMap {
+                                repository.save(it.copy(season = currentSeason.id))
+                            }
                     }
                     true -> Mono.empty()
                 }

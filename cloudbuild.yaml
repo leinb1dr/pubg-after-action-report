@@ -1,0 +1,10 @@
+steps:
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      [
+          "deploy", "releases", "create", "rel-${SHORT_SHA}",
+          "--delivery-pipeline", "after-action-report",
+          "--region", "us-central1",
+          "--source", "./",
+      ]

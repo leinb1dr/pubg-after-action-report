@@ -1,0 +1,17 @@
+---
+apiVersion: deploy.cloud.google.com/v1beta1
+kind: DeliveryPipeline
+metadata:
+  name: after-action-report
+description: After Action Report Deployment Pipeline
+serialPipeline:
+  stages:
+    - targetId: poc
+---
+apiVersion: deploy.cloud.google.com/v1beta1
+kind: Target
+metadata:
+  name: poc
+description: POC Environment
+gke:
+  cluster: projects/leinb1dr-test-application-1/locations/us-central1/clusters/after-action-report

@@ -4,10 +4,9 @@ import com.leinb1dr.pubg.afteractionreport.core.*
 import com.leinb1dr.pubg.afteractionreport.match.Match
 import com.leinb1dr.pubg.afteractionreport.match.MatchProcessor
 import com.leinb1dr.pubg.afteractionreport.player.match.PlayerMatch
-import com.leinb1dr.pubg.afteractionreport.player.season.PlayerSeasonService
+import com.leinb1dr.pubg.afteractionreport.player.season.PlayerSeason
+import com.leinb1dr.pubg.afteractionreport.player.season.PlayerSeasonStorageService
 import com.leinb1dr.pubg.afteractionreport.report.ReportProcessor
-import com.leinb1dr.pubg.afteractionreport.seasons.CurrentSeason
-import com.leinb1dr.pubg.afteractionreport.seasons.CurrentSeasonService
 import com.mongodb.assertions.Assertions.assertTrue
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -26,10 +25,7 @@ class StatsProcessorTest {
     lateinit var matchProcessor: MatchProcessor
 
     @MockK
-    lateinit var currentSeasonService: CurrentSeasonService
-
-    @MockK
-    lateinit var playerSeasonService: PlayerSeasonService
+    lateinit var playerSeasonStorageService: PlayerSeasonStorageService
 
     @SpyK
     var reportProcessor: ReportProcessor = ReportProcessor()
@@ -66,39 +62,35 @@ class StatsProcessorTest {
                                 )
                             )
                         ),
-                        PubgData(type = "participant", "1", ParticipantAttributes(ParticipantStats(playerId = "account.0bee6c2ee01d44299425625bcb9e7ddb"), "steam")),
-                        PubgData(type = "participant", "2", ParticipantAttributes(ParticipantStats(playerId = "account.0bee6c2ee01d44299425625bcb9e7d02"), "steam"))
+                        PubgData(
+                            type = "participant",
+                            "1",
+                            ParticipantAttributes(
+                                ParticipantStats(playerId = "account.0bee6c2ee01d44299425625bcb9e7ddb"),
+                                "steam"
+                            )
+                        ),
+                        PubgData(
+                            type = "participant",
+                            "2",
+                            ParticipantAttributes(
+                                ParticipantStats(playerId = "account.0bee6c2ee01d44299425625bcb9e7d02"),
+                                "steam"
+                            )
+                        )
 
                     )
                 )
             )
         )
 
-        every { currentSeasonService.getCurrentSeason() } returns Mono.just(
-            CurrentSeason(season = "division.bro.official.2017-pre1")
-        )
+        every {
+            playerSeasonStorageService.getSeasonStats("account.0bee6c2ee01d44299425625bcb9e7ddb", match { true })
+        } returns Mono.just(PlayerSeason())
 
         every {
-            playerSeasonService.getPlayerSeasonStats(
-                match { it.pubgId=="account.0bee6c2ee01d44299425625bcb9e7ddb" },
-                "division.bro.official.2017-pre1",
-                match { true }
-            )
-        } returns Mono.just(object : Stats {
-            override val attributes: MatchAttributes? = null
-            override val stats: AbstractStats = SeasonStats()
-        })
-
-        every {
-            playerSeasonService.getPlayerSeasonStats(
-                match { it.pubgId=="account.0bee6c2ee01d44299425625bcb9e7d02" },
-                "division.bro.official.2017-pre1",
-                match { true }
-            )
-        } returns Mono.just(object : Stats {
-            override val attributes: MatchAttributes? = null
-            override val stats: AbstractStats = SeasonStats()
-        })
+            playerSeasonStorageService.getSeasonStats("account.0bee6c2ee01d44299425625bcb9e7d02", match { true })
+        } returns Mono.just(PlayerSeason())
 
 
         val reportStats = runBlocking { statsProcessor.collectStats(playerMatch).awaitSingle() }
