@@ -39,7 +39,7 @@ spec:
                   optional: false
           volumeMounts:
             - name: {{ include "mongo.fullname" . }}-data
-              mountPath: /data
+              mountPath: /data/db
           resources:
             limits:
               cpu: 250m
