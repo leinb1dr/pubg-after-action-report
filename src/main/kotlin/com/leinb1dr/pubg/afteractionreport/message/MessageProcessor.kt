@@ -10,6 +10,7 @@ import reactor.core.publisher.Mono
 class MessageProcessor(@Autowired private val messageService: MessageService) {
 
     fun sendMessage(report: TeamReport): Mono<DiscordMessage> = Mono.just(report)
+        .filter { it.place <= 10 }
         .flatMap { teamReport ->
             Flux.fromIterable(report.reports)
                 .reportToMessageFieldTransformer()
