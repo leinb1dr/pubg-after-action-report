@@ -13,6 +13,8 @@ import com.leinb1dr.pubg.afteractionreport.report.RawReportStats
 import com.leinb1dr.pubg.afteractionreport.report.ReportProcessor
 import com.leinb1dr.pubg.afteractionreport.report.TeamReport
 import com.leinb1dr.pubg.afteractionreport.seasons.CurrentSeasonService
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.internal.synchronized
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
@@ -70,6 +72,7 @@ class StatsProcessor(
                 }
         }
 
+    @OptIn(InternalCoroutinesApi::class)
     private fun Mono<Match>.extractRoster(playerMatch: PlayerMatch): Mono<StatsProcessorContext> = this.flatMap { match ->
         Mono
             .just(match.data.included!!.filter { it.type == "participant" }
@@ -83,11 +86,13 @@ class StatsProcessor(
                     }
             }
             .filter {
-                if(cache.getIfPresent(it!!.id) == null){
-                    cache.put(it.id, it.id)
-                    return@filter true
+                synchronized(cache) {
+                    if (cache.getIfPresent(it!!.id) == null) {
+                        cache.put(it.id, it.id)
+                        return@filter true
+                    }
+                    return@filter false
                 }
-                return@filter false
             }
             .doOnNext { cache.put(it!!.id, it.id) }
             .defaultIfEmpty(PubgData())
