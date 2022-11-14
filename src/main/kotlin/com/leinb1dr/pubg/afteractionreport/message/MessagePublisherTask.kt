@@ -1,22 +1,19 @@
-package com.leinb1dr.pubg.afteractionreport.event
+package com.leinb1dr.pubg.afteractionreport.message
 
-import com.google.common.cache.CacheBuilder
-import com.leinb1dr.pubg.afteractionreport.message.MessageProcessor
 import com.leinb1dr.pubg.afteractionreport.report.TeamReport
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Sinks
-import java.util.concurrent.TimeUnit
 import javax.annotation.PostConstruct
 
 @Service
-class MessagePublisher(
+class MessagePublisherTask(
     @Autowired val messageProcessor: MessageProcessor
 ) {
 
     private val sink = Sinks.many().replay().latest<TeamReport>()
-    private val logger = LoggerFactory.getLogger(MessagePublisher::class.java)
+    private val logger = LoggerFactory.getLogger(MessagePublisherTask::class.java)
 
     @PostConstruct
     fun register() {

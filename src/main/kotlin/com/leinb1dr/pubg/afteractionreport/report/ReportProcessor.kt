@@ -4,6 +4,7 @@ import com.leinb1dr.pubg.afteractionreport.core.ParticipantStats
 import com.leinb1dr.pubg.afteractionreport.core.PubgData
 import com.leinb1dr.pubg.afteractionreport.core.SeasonStats
 import com.leinb1dr.pubg.afteractionreport.match.Match
+import com.leinb1dr.pubg.afteractionreport.stats.StatsProcessorContext
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 import java.time.OffsetDateTime
@@ -13,7 +14,8 @@ import kotlin.math.max
 
 @Service
 class ReportProcessor {
-    fun transformReport(rawReportStats: RawReportStats): Mono<Report> {
+    fun transformReport(statsProcessorContext: StatsProcessorContext): Mono<StatsProcessorContext> {
+        val rawReportStats = statsProcessorContext.rawReportStats!!
         return Mono.just(rawReportStats).map {
             val matchAttributes = it.matchStats.attributes!!
             val matchStats = it.matchStats.stats as ParticipantStats
@@ -60,12 +62,14 @@ class ReportProcessor {
                 isInteresting(matchStats.weaponsAcquired, seasonStats.weaponsAcquired)
             )
 
-            return@map Report(
+            statsProcessorContext.report = Report(
                 matchAttributes.mapName,
                 formatMatchTime(matchAttributes.createdAt),
                 matchStats.name,
                 fields
             )
+
+            statsProcessorContext
         }
     }
 

@@ -15,30 +15,29 @@ enum class ReportAnnotation(val emoji: String) {
 
 data class ReportFields(
 
-    val DBNOs: AnnotatedField<Int>,
-    val assists: AnnotatedField<Int>,
-    val damageDealt: AnnotatedField<Double>,
+    val DBNOs: AnnotatedField<Int> = AnnotatedField(0,ReportAnnotation.NONE),
+    val assists: AnnotatedField<Int> = AnnotatedField(0,ReportAnnotation.NONE),
+    val damageDealt: AnnotatedField<Double> = AnnotatedField(0.0,ReportAnnotation.NONE),
     val deathType: String = "none",
-    val headshotKills: AnnotatedField<Int>,
+    val headshotKills: AnnotatedField<Int> = AnnotatedField(0,ReportAnnotation.NONE),
     val name: String = "#PlayerUnknown",
-    val kills: AnnotatedField<Int>,
-    val winPlace: Int,
-    val killPlace: Int,
-    val timeSurvived: Double,
-    val heals: Int,
-    val revives: Int,
-    val killStreaks: Int,
-    val longestKill: Double,
-//    val playerId: String = "#PlayerUnknown",
-    val rideDistance: Double,
-    val roadKills: Int,
-    val swimDistance: Double,
-    val teamKills: Int,
-    val vehicleDestroys: Int,
-    val walkDistance: Double,
-    val weaponsAcquired: Int,
+    val kills: AnnotatedField<Int> = AnnotatedField(0,ReportAnnotation.NONE),
+    val winPlace: Int = 0,
+    val killPlace: Int = 0,
+    val timeSurvived: Double = 0.0,
+    val heals: Int = 0,
+    val revives: Int = 0,
+    val killStreaks: Int = 0,
+    val longestKill: Double = 0.0,
+    val rideDistance: Double = 0.0,
+    val roadKills: Int = 0,
+    val swimDistance: Double = 0.0,
+    val teamKills: Int = 0,
+    val vehicleDestroys: Int = 0,
+    val walkDistance: Double = 0.0,
+    val weaponsAcquired: Int = 0,
 
-)
+    )
 
 data class AnnotatedField<T>(val value: T, val annotation: ReportAnnotation) {
     override fun toString(): String =

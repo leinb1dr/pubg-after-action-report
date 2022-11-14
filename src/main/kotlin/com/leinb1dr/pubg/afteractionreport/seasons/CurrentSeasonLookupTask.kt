@@ -1,8 +1,7 @@
 @file:Suppress("unused")
 
-package com.leinb1dr.pubg.afteractionreport.event
+package com.leinb1dr.pubg.afteractionreport.seasons
 
-import com.leinb1dr.pubg.afteractionreport.seasons.CurrentSeasonService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -11,7 +10,7 @@ import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 
 @Service
-class SeasonUpdater(@Autowired private val currentSeasonService: CurrentSeasonService) {
+class CurrentSeasonLookupTask(@Autowired private val currentSeasonService: CurrentSeasonService) {
 
     private val sink = Sinks.many().replay().latest<Long?>()
 
@@ -31,7 +30,7 @@ class SeasonUpdater(@Autowired private val currentSeasonService: CurrentSeasonSe
     }
 
     @PreDestroy
-    fun shutdown(){
+    fun shutdown() {
         sink.tryEmitComplete()
     }
 }

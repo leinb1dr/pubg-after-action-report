@@ -1,6 +1,7 @@
 package com.leinb1dr.pubg.afteractionreport.match
 
 import com.google.common.cache.CacheBuilder
+import com.leinb1dr.pubg.afteractionreport.player.PlayerMatch
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -17,8 +18,13 @@ class MatchProcessor(
     private val logger = LoggerFactory.getLogger(MatchProcessor::class.java)
 
     fun process(requestedMatchId: String): Mono<Match> =
-        Mono.just(requestedMatchId).filter { cache.getIfPresent(it) == null }
-            .doOnNext { cache.put(it, it) }
+        Mono.just(requestedMatchId).filter {
+            if (cache.getIfPresent(it) == null) {
+                cache.put(it, it)
+                return@filter true
+            }
+            return@filter false
+        }
             .doOnNext { logger.debug("Match not recently processed: $it") }
             .flatMap { matchId ->
                 matchStorageService.matchExists(matchId)
@@ -28,5 +34,16 @@ class MatchProcessor(
             .doOnNext { logger.debug("Match[$it] not stored in db") }
             .flatMap(matchDetailsService::getMatch)
             .flatMap(matchStorageService::storeMatch)
+
+    fun lookup(playerMatch: PlayerMatch) =
+        matchStorageService.matchExists(playerMatch.matchId)
+            .flatMap {
+                when (it) {
+                    true -> Mono.just(playerMatch)
+                    false -> Mono.empty()
+                }
+            }
+            .flatMap { matchStorageService.getMatch(it.matchId) }
+
 
 }

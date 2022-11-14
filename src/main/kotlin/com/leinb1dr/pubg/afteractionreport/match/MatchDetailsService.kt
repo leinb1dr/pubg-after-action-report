@@ -24,8 +24,4 @@ class MatchDetailsService(@Autowired @Qualifier("pubgClient") private val client
         .doOnError { t -> logger.error("Failed to get match details", t) }
         .onErrorResume { Mono.empty() }
 
-    fun getMatchDetailsForPlayer(playerMatch: PlayerMatch): Mono<Stats> =
-        getMatch(playerMatch.matchId).map{Stats.create(it, playerMatch, (it.data!![0].attributes as MatchAttributes).gameMode)}
-
-
 }

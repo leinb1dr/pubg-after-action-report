@@ -1,9 +1,6 @@
-package com.leinb1dr.pubg.afteractionreport.event
+package com.leinb1dr.pubg.afteractionreport.match
 
 import com.google.common.cache.CacheBuilder
-import com.leinb1dr.pubg.afteractionreport.match.MatchDetailsService
-import com.leinb1dr.pubg.afteractionreport.match.MatchProcessor
-import com.leinb1dr.pubg.afteractionreport.match.MatchStorageService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -12,12 +9,12 @@ import java.util.concurrent.TimeUnit
 import javax.annotation.PostConstruct
 
 @Service
-class NewMatchCollector(
+class NewMatchLookupTask(
     @Autowired private val matchProcessor: MatchProcessor
 ) {
 
     private val sink = Sinks.many().replay().latest<String>()
-    private val logger = LoggerFactory.getLogger(NewMatchCollector::class.java)
+    private val logger = LoggerFactory.getLogger(NewMatchLookupTask::class.java)
     private val cache = CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.MINUTES).build<String, String>()
 
     @PostConstruct
