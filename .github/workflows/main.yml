@@ -53,6 +53,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         with:
           context: .
+          file: Dockerfile-report-generator
           push: true
           tags: leinb1dr/after-action-report:latest
 

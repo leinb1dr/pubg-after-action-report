@@ -1,0 +1,40 @@
+app:
+  bot-token: Mzk5MTAyMTM5NTE3MTA4MjQ4.GDYZVw.z8n-jruS1YgNvyP2RTL_94Ploy4vmb-bejemB4
+
+spring:
+  application:
+    name: command-gateway
+  main:
+    allow-bean-definition-overriding: true
+  jackson:
+    deserialization:
+      accept_single_value_as_array: true
+  data:
+    mongodb:
+      database: after-action-report
+management:
+  metrics:
+    export:
+      stackdriver:
+        enabled: false
+      prometheus:
+        enabled: true
+  endpoints:
+    prometheus:
+      enabled: true
+    web:
+      exposure:
+        include:
+          - metrics
+          - prometheus
+          - health
+          - liveness
+
+logging:
+  level:
+    root: INFO
+    org:
+      springframework: WARN
+      mongo: WARN
+    com:
+      leinb1dr: DEBUG
