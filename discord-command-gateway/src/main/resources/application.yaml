@@ -1,6 +1,3 @@
-app:
-  bot-token: Mzk5MTAyMTM5NTE3MTA4MjQ4.GDYZVw.z8n-jruS1YgNvyP2RTL_94Ploy4vmb-bejemB4
-
 spring:
   application:
     name: command-gateway

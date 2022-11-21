@@ -71,7 +71,7 @@ class GatewayManagementService(
                         Identity(
                             IdentityPayload(
                                 appProperties.botToken,
-                                3072,
+                                52224,
                                 shards = arrayOf(0, shards),
                                 ConnectionProperties(
                                     System.getProperty("os.name").lowercase(),
