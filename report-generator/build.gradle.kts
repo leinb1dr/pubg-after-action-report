@@ -48,6 +48,7 @@ repositories {
 }
 
 dependencies {
+	implementation(project(":pubg-client"))
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	runtimeOnly("io.micrometer:micrometer-registry-prometheus")
 	implementation("io.micrometer:micrometer-registry-stackdriver")

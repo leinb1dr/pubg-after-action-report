@@ -3,15 +3,13 @@ package com.leinb1dr.pubg.afteractionreport.player
 import com.leinb1dr.pubg.afteractionreport.core.PubgData
 import com.leinb1dr.pubg.afteractionreport.core.PubgWrapper
 import com.leinb1dr.pubg.afteractionreport.player.match.PlayerDetailsService
-import com.leinb1dr.pubg.afteractionreport.player.match.PlayerMatch
-import com.leinb1dr.pubg.afteractionreport.util.SetupWebClientMock
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -26,11 +24,11 @@ class PlayerDetailsServiceTest() {
     @InjectMockKs
     lateinit var ps: PlayerDetailsService
 
-    lateinit var webClientMock: SetupWebClientMock.Builder
+    lateinit var webClientMock: com.leinb1dr.pubg.afteractionreport.util.SetupWebClientMock.Builder
 
     @BeforeEach
     fun setup() {
-        webClientMock = SetupWebClientMock.Builder(webClient)
+        webClientMock = com.leinb1dr.pubg.afteractionreport.util.SetupWebClientMock.Builder(webClient)
         webClientMock.get().uri {
             every { it.uri("/players?filter[playerNames]={name}", "stealthg0d") } returns it
             every { it.uri("/players/{id}", "account.0bee6c2ee01d44299425625bcb9e7d00") } returns it
@@ -55,19 +53,22 @@ class PlayerDetailsServiceTest() {
                 ps.findPlayersByIds(arrayListOf("account.0bee6c2ee01d44299425625bcb9e7d00")).awaitSingle()
             }
 
-        assertEquals(1, pubgResults.data!!.size)
-        assertEquals("account.0bee6c2ee01d44299425625bcb9e7d00", pubgResults.data!![0].id)
+        Assertions.assertEquals(1, pubgResults.data!!.size)
+        Assertions.assertEquals("account.0bee6c2ee01d44299425625bcb9e7d00", pubgResults.data!![0].id)
     }
 
     @Test
     fun `Get new matches for players`() {
         webClientMock.body(player)
 
-        val playerMatches: List<PlayerMatch> =
-            runBlocking { ps.getLatestPlayerMatches(arrayListOf("account.0bee6c2ee01d44299425625bcb9e7d00")).collectList().awaitSingle() }
+        val playerMatches: List<PubgData> =
+            runBlocking {
+                ps.getLatestPlayerMatches(arrayListOf("account.0bee6c2ee01d44299425625bcb9e7d00"))
+                    .collectList().awaitSingle()
+            }
 
-        assertEquals(1, playerMatches.size)
-        assertEquals("bb70dbd7-631d-4d95-8e9e-fc5c2fdcf500", playerMatches[0].matchId)
+        Assertions.assertEquals(1, playerMatches.size)
+        Assertions.assertEquals("bb70dbd7-631d-4d95-8e9e-fc5c2fdcf500", playerMatches[0].id)
     }
 
     companion object {

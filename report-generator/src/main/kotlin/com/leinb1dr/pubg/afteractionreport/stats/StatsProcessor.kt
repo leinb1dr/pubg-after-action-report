@@ -72,7 +72,7 @@ class StatsProcessor(
                     .map { it.id }
                     .first())
                 .map { participantId ->
-                    match.data.included.filter { it.type == "roster" }
+                    match.data.included!!.filter { it.type == "roster" }
                         .find { rosterData ->
                             rosterData.relationships!!["participants"]!!.data!!.any { it.id == participantId }
                         }

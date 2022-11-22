@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class DiscordDeserializerTest(@Autowired val om: ObjectMapper) {
-
+class DiscordDeserializerTest() {
+    @Autowired lateinit var om: ObjectMapper
     @Test
     fun deserializePlayerTest() {
         val readValue = om.readValue(

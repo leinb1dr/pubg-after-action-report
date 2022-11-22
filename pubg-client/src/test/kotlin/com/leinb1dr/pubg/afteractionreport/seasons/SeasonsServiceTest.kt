@@ -10,8 +10,6 @@ import io.mockk.mockkClass
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -48,8 +46,8 @@ class SeasonsServiceTest {
 
         val pubgResults = runBlocking { ss.getCurrentSeason().awaitSingle() }
 
-        assertEquals("division.bro.official.2017-pre1", pubgResults.id)
-        assertTrue((pubgResults.attributes as SeasonAttributes).isCurrentSeason)
+        Assertions.assertEquals("division.bro.official.2017-pre1", pubgResults.id)
+        Assertions.assertTrue((pubgResults.attributes as SeasonAttributes).isCurrentSeason)
     }
 
     @Test

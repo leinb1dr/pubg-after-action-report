@@ -15,6 +15,7 @@ class PlayerProcessor(
             .collectMap({ it.pubgId }, { it.matchId })
             .flatMapMany {
                 playerDetailsService.getLatestPlayerMatches(listOf(elements = it.keys.toTypedArray()))
+                    .map(PlayerMatch.Factory::create)
                     .filter { playerMatch ->
                         it[playerMatch.pubgId] != playerMatch.matchId
                     }

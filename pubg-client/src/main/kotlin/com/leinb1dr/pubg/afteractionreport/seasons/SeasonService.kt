@@ -17,7 +17,7 @@ import reactor.kotlin.core.publisher.toMono
 @Service
 class SeasonService(@Autowired @Qualifier("pubgClient") private val client: WebClient) {
 
-    private val logger:Logger = LoggerFactory.getLogger(SeasonService::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(SeasonService::class.java)
 
     fun getCurrentSeason(): Mono<PubgData> {
         return client.get().uri("/seasons").retrieve().toEntity<PubgWrapper>()

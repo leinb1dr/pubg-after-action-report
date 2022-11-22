@@ -8,18 +8,18 @@ import org.springframework.web.reactive.socket.client.StandardWebSocketClient
 import org.springframework.web.reactive.socket.client.WebSocketClient
 
 @Configuration
-@EnableConfigurationProperties(AppProperties::class)
+@EnableConfigurationProperties(DiscordProperties::class)
 class WebClientConfiguration {
 
     @Bean
     fun webSocketClient():WebSocketClient = StandardWebSocketClient()
 
     @Bean
-    fun discordClient(builder: WebClient.Builder, appProperties: AppProperties): WebClient {
+    fun discordClient(builder: WebClient.Builder, discordProperties: DiscordProperties): WebClient {
         return builder.clone()
             .baseUrl("https://discord.com/api")
             .defaultHeaders {
-                it["Authorization"]="Bot ${appProperties.botToken}"
+                it["Authorization"]="Bot ${discordProperties.token}"
                 it["Accept"]="application/vnd.api+json"
             }
             .build()

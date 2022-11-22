@@ -1,7 +1,7 @@
 package com.leinb1dr.pubg.commandgateway.gateway
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.leinb1dr.pubg.commandgateway.config.AppProperties
+import com.leinb1dr.pubg.commandgateway.config.DiscordProperties
 import com.leinb1dr.pubg.commandgateway.gateway.events.*
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -10,12 +10,10 @@ import org.springframework.web.reactive.socket.client.WebSocketClient
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.core.publisher.Sinks
-import reactor.core.scheduler.Schedulers
 import java.net.URI
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
-import java.time.temporal.TemporalUnit
 import javax.annotation.PostConstruct
 
 @Service
@@ -23,7 +21,7 @@ class GatewayManagementService(
     @Autowired private val gatewayUrlService: GatewayUrlService,
     @Autowired private val webSocketClient: WebSocketClient,
     @Autowired private val objectMapper: ObjectMapper,
-    @Autowired val appProperties: AppProperties
+    @Autowired val discordProperties: DiscordProperties
 ) {
     private val sink = Sinks.many().replay().latest<DiscordEvent>()
     private val logger = LoggerFactory.getLogger(GatewayManagementService::class.java)
@@ -70,7 +68,7 @@ class GatewayManagementService(
                     Flux.just(
                         Identity(
                             IdentityPayload(
-                                appProperties.botToken,
+                                discordProperties.token,
                                 52224,
                                 shards = arrayOf(0, shards),
                                 ConnectionProperties(

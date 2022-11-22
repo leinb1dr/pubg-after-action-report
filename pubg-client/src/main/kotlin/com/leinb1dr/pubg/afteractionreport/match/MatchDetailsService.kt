@@ -9,7 +9,6 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.toEntity
 import reactor.core.publisher.Mono
 
-
 @Service
 class MatchDetailsService(@Autowired @Qualifier("pubgClient") private val client: WebClient) {
 
