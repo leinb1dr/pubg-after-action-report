@@ -32,8 +32,9 @@ jobs:
         uses: gradle/gradle-build-action@v2.3.3
         if: github.ref == 'refs/heads/main'
         env:
-         APP_PUBGTOKEN: ${{ secrets.APP_PUBGTOKEN }}
+         APP_PUBG_TOKEN: ${{ secrets.APP_PUBGTOKEN }}
          APP_DISCORDWEBHOOK: ${{ secrets.APP_DISCORDWEBHOOK }}
+         APP_DISCORD_TOKEN: ${{ secrets.APP_DISCORD_TOKEN }}
          SPRING_PROFILES_ACTIVE: test
         with:
          arguments: intTest
