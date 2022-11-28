@@ -58,7 +58,7 @@ spec:
                 secretKeyRef:
                   name: {{ include "aar.fullname" . }}-secret
                   key: managementPassword
-            - name: APP_PUBGTOKEN
+            - name: APP_PUBG_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: {{ include "aar.fullname" . }}-secret
