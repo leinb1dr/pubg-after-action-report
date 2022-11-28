@@ -40,7 +40,7 @@ internal class MessageProcessorTest {
             messageProcessor.sendMessage(
                 TeamReport(
                     PubgData("roster", "1234", attributes = RosterAttributes(RosterStats(rank = 3), false, "steam")),
-                    Match(
+                    com.leinb1dr.pubg.afteractionreport.match.Match(
                         matchId = "asdf",
                         data = PubgWrapper(data = arrayOf(PubgData(attributes = MatchAttributes(mapName = PubgMap.DESTON))))
                     ),
@@ -71,7 +71,7 @@ internal class MessageProcessorTest {
             messageProcessor.sendMessage(
                 TeamReport(
                     PubgData("roster", "1234", attributes = RosterAttributes(RosterStats(rank = 2), false, "steam")),
-                    Match(
+                    com.leinb1dr.pubg.afteractionreport.match.Match(
                         matchId = "asdf",
                         data = PubgWrapper(data = arrayOf(PubgData(attributes = MatchAttributes(mapName = PubgMap.DESTON))))
                     ),

@@ -8,3 +8,4 @@ rootProject.name = "after-action-report"
 include("discord-command-gateway")
 include("report-generator")
 include("pubg-client")
+include("aar-data-client")

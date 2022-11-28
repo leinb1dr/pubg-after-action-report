@@ -20,6 +20,15 @@ class PlayerDetailsService(@Autowired @Qualifier("pubgClient") private val clien
         return findPlayersByIds(pubgIds).flatMapMany { Flux.fromArray(it.data!!) }
     }
 
+    fun findPlayersByNames(pubgIds: List<String>): Mono<PubgWrapper> {
+        return client.get().uri("/players?filter[playerNames]={name}", pubgIds.joinToString(","))
+            .retrieve()
+            .toEntity<PubgWrapper>()
+            .map { it.body ?: throw Exception("Player Not Found") }
+            .doOnError { t -> logger.error("Failed to find player by ids", t) }
+            .onErrorResume { Mono.empty() }
+    }
+
     fun findPlayersByIds(pubgIds: List<String>): Mono<PubgWrapper> {
         return client.get().uri("/players?filter[playerIds]={name}", pubgIds.joinToString(","))
             .retrieve()

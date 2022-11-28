@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 
 @Service
-class CurrentSeasonLookupTask(@Autowired private val currentSeasonService: CurrentSeasonService) {
+class CurrentSeasonLookupTask(@Autowired private val currentSeasonService: com.leinb1dr.pubg.afteractionreport.seasons.CurrentSeasonService) {
 
     private val sink = Sinks.many().replay().latest<Long?>()
 

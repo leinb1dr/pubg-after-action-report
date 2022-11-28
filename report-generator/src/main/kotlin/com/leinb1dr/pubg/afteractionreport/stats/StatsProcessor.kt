@@ -4,13 +4,12 @@ import com.google.common.cache.CacheBuilder
 import com.leinb1dr.pubg.afteractionreport.core.MatchAttributes
 import com.leinb1dr.pubg.afteractionreport.core.ParticipantAttributes
 import com.leinb1dr.pubg.afteractionreport.core.PubgData
-import com.leinb1dr.pubg.afteractionreport.match.Match
 import com.leinb1dr.pubg.afteractionreport.match.MatchProcessor
 import com.leinb1dr.pubg.afteractionreport.player.match.PlayerMatch
-import com.leinb1dr.pubg.afteractionreport.player.season.PlayerSeasonStorageService
 import com.leinb1dr.pubg.afteractionreport.report.RawReportStats
 import com.leinb1dr.pubg.afteractionreport.report.ReportProcessor
 import com.leinb1dr.pubg.afteractionreport.report.TeamReport
+import com.leinb1dr.pubg.afteractionreport.user.UserService
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.internal.synchronized
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,7 +21,7 @@ import java.util.concurrent.TimeUnit
 @Service
 class StatsProcessor(
     @Autowired val matchProcessor: MatchProcessor,
-    @Autowired val playerSeasonStorageService: PlayerSeasonStorageService,
+    @Autowired val userService: UserService,
     @Autowired val reportProcessor: ReportProcessor
 ) {
     private val cache = CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.MINUTES).build<String, String>()
@@ -51,11 +50,9 @@ class StatsProcessor(
 
     private fun Flux<StatsProcessorContext>.gatherSeasonStatsForParticipants(): Flux<StatsProcessorContext> =
         this.flatMap { context ->
-            playerSeasonStorageService.getSeasonStats(
-                (context.participant!!.attributes as ParticipantAttributes).stats.playerId,
-                (context.match!!.data.data!![0].attributes as MatchAttributes).gameMode
-            )
-                .map { Stats.create(it.stats) }
+            userService.getUserByPubgId((context.participant!!.attributes as ParticipantAttributes).stats.playerId)
+                .map { it.seasonStats[(context.match!!.data.data!![0].attributes as MatchAttributes).gameMode] }
+                .map { it?.let { it1 -> Stats.create(it1) } }
                 .map { RawReportStats(context.participant!!, context.match!!, it) }
                 .map {
                     context.rawReportStats = it
@@ -64,7 +61,7 @@ class StatsProcessor(
         }
 
     @OptIn(InternalCoroutinesApi::class)
-    private fun Mono<Match>.extractRoster(playerMatch: PlayerMatch): Mono<StatsProcessorContext> =
+    private fun Mono<com.leinb1dr.pubg.afteractionreport.match.Match>.extractRoster(playerMatch: PlayerMatch): Mono<StatsProcessorContext> =
         this.flatMap { match ->
             Mono
                 .just(match.data.included!!.filter { it.type == "participant" }

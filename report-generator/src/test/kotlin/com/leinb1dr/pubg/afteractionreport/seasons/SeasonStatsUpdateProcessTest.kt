@@ -1,12 +1,10 @@
 package com.leinb1dr.pubg.afteractionreport.seasons
 
 import com.leinb1dr.pubg.afteractionreport.core.*
-import com.leinb1dr.pubg.afteractionreport.player.match.DefaultPlayerMatch
-import com.leinb1dr.pubg.afteractionreport.player.match.PlayerMatchService
-import com.leinb1dr.pubg.afteractionreport.player.season.PlayerSeason
 import com.leinb1dr.pubg.afteractionreport.player.season.PlayerSeasonService
 import com.leinb1dr.pubg.afteractionreport.player.season.PlayerSeasonStatsUpdateProcessor
-import com.leinb1dr.pubg.afteractionreport.player.season.PlayerSeasonStorageService
+import com.leinb1dr.pubg.afteractionreport.user.User
+import com.leinb1dr.pubg.afteractionreport.user.UserService
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -20,7 +18,7 @@ import reactor.core.publisher.Mono
 class SeasonStatsUpdateProcessTest {
 
     @MockK
-    lateinit var playerMatchService: PlayerMatchService
+    lateinit var userService: UserService
 
     @MockK
     lateinit var currentSeasonService: CurrentSeasonService
@@ -28,18 +26,19 @@ class SeasonStatsUpdateProcessTest {
     @MockK
     lateinit var playerSeasonService: PlayerSeasonService
 
-    @MockK
-    lateinit var playerSeasonStorageService: PlayerSeasonStorageService
-
     @InjectMockKs
     lateinit var seasonStatsUpdateProcess: PlayerSeasonStatsUpdateProcessor
 
     @Test
     fun `Update season stats`() {
 
-        every { playerMatchService.getProcessedPlayerMatches() } returns
-                Flux.just(DefaultPlayerMatch("1", ""), DefaultPlayerMatch("2", ""))
-        every { currentSeasonService.getCurrentSeason() } returns Mono.just(CurrentSeason(season = "season"))
+        every { userService.getAllUsers() } returns
+                Flux.just(User(discordId = "", pubgId = "1", matchId=""), User(discordId = "", pubgId = "2", matchId=""))
+        every { currentSeasonService.getCurrentSeason() } returns Mono.just(
+            com.leinb1dr.pubg.afteractionreport.seasons.CurrentSeason(
+                season = "season"
+            )
+        )
         every { playerSeasonService.getAllPlayerSeasonStats("1", "season") } returns
                 Mono.just(
                     PubgWrapper(
@@ -79,21 +78,16 @@ class SeasonStatsUpdateProcessTest {
         )
 
         every {
-            playerSeasonStorageService.saveSeasonStats(
+            userService.updateUserSeasonStats(
                 "1",
                 match { true })
-        } returns Flux.just(
-            PlayerSeason(pubgId = "1", gameMode = GameMode.SQUAD_FPP),
-            PlayerSeason(pubgId = "1", gameMode = GameMode.DUO_FPP)
-        )
+        } returns Mono.just(1)
 
         every {
-            playerSeasonStorageService.saveSeasonStats(
+            userService.updateUserSeasonStats(
                 "2",
                 match { true })
-        } returns Flux.just(
-            PlayerSeason(pubgId = "1", gameMode = GameMode.SQUAD_FPP)
-        )
+        } returns Mono.just(1)
 
         seasonStatsUpdateProcess.process()
     }

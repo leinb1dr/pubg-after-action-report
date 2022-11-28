@@ -10,14 +10,14 @@ import java.util.concurrent.TimeUnit
 
 @Service
 class MatchProcessor(
-    @Autowired private val matchStorageService: MatchStorageService,
+    @Autowired private val matchStorageService: com.leinb1dr.pubg.afteractionreport.match.MatchStorageService,
     @Autowired private val matchDetailsService: MatchDetailsService
 ) {
 
     private val cache = CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.MINUTES).build<String, String>()
     private val logger = LoggerFactory.getLogger(MatchProcessor::class.java)
 
-    fun process(requestedMatchId: String): Mono<Match> =
+    fun process(requestedMatchId: String): Mono<com.leinb1dr.pubg.afteractionreport.match.Match> =
         Mono.just(requestedMatchId).filter {
             if (cache.getIfPresent(it) == null) {
                 cache.put(it, it)

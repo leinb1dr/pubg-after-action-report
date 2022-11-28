@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono
 internal class MatchProcessorTest {
 
     @MockK
-    private lateinit var matchStorageService: MatchStorageService
+    private lateinit var matchStorageService: com.leinb1dr.pubg.afteractionreport.match.MatchStorageService
 
     @MockK
     private lateinit var matchDetailsService: MatchDetailsService
@@ -40,9 +40,14 @@ internal class MatchProcessorTest {
         val matchToStore = PubgWrapper()
         every { matchStorageService.matchExists("asdf") } returns Mono.just(false)
         every { matchDetailsService.getMatch("asdf") } returns Mono.just(matchToStore)
-        every { matchStorageService.storeMatch(matchToStore) } returns Mono.just(Match(data=matchToStore, matchId = "asdf"))
+        every { matchStorageService.storeMatch(matchToStore) } returns Mono.just(
+            com.leinb1dr.pubg.afteractionreport.match.Match(
+                data = matchToStore,
+                matchId = "asdf"
+            )
+        )
 
-        val match: Match = runBlocking { matchProcessor.process("asdf").awaitSingle() }
+        val match: com.leinb1dr.pubg.afteractionreport.match.Match = runBlocking { matchProcessor.process("asdf").awaitSingle() }
         assertEquals(matchToStore, match.data)
     }
 
@@ -57,7 +62,12 @@ internal class MatchProcessorTest {
     @Test
     fun `Lookup - match exists`() {
         every { matchStorageService.matchExists("asdf") } returns Mono.just(true)
-        every { matchStorageService.getMatch("asdf") } returns Mono.just(Match(data = PubgWrapper(), matchId = "asdf"))
+        every { matchStorageService.getMatch("asdf") } returns Mono.just(
+            com.leinb1dr.pubg.afteractionreport.match.Match(
+                data = PubgWrapper(),
+                matchId = "asdf"
+            )
+        )
         runBlocking { matchProcessor.lookup(DefaultPlayerMatch("123", "asdf")).awaitSingle() }
 
     }

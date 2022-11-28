@@ -4,7 +4,7 @@ import org.bson.types.ObjectId
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository
 import reactor.core.publisher.Mono
 
-interface MatchRepository:ReactiveMongoRepository<Match, ObjectId> {
+interface MatchRepository: ReactiveMongoRepository<Match, ObjectId> {
 
     fun existsByMatchId(pubgMatchId: String): Mono<Boolean>
 

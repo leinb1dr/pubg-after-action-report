@@ -20,13 +20,13 @@ class CurrentSeasonServiceTest {
     lateinit var ss: SeasonService
 
     @MockK
-    lateinit var repository: CurrentSeasonRepository
+    lateinit var repository: com.leinb1dr.pubg.afteractionreport.seasons.CurrentSeasonRepository
 
-    lateinit var css: CurrentSeasonService
+    lateinit var css: com.leinb1dr.pubg.afteractionreport.seasons.CurrentSeasonService
 
     @BeforeEach
     fun setup() {
-        css = CurrentSeasonService(repository, ss)
+        css = com.leinb1dr.pubg.afteractionreport.seasons.CurrentSeasonService(repository, ss)
     }
 
     @Test
@@ -39,10 +39,14 @@ class CurrentSeasonServiceTest {
                 id = "division.bro.official.2017-pre1"
             )
         )
-        every { repository.findByCurrent(true) } returns Mono.just(CurrentSeason(season = ""))
+        every { repository.findByCurrent(true) } returns Mono.just(
+            com.leinb1dr.pubg.afteractionreport.seasons.CurrentSeason(
+                season = ""
+            )
+        )
 
         every { repository.save(match { it.season == "division.bro.official.2017-pre1" }) } returns Mono.just(
-            CurrentSeason(season = "division.bro.official.2017-pre1")
+            com.leinb1dr.pubg.afteractionreport.seasons.CurrentSeason(season = "division.bro.official.2017-pre1")
         )
 
         val pubgResults = runBlocking { css.updateSeason().awaitSingle() }

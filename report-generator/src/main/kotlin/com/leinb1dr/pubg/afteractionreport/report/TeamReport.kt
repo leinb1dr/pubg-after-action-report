@@ -11,7 +11,7 @@ data class TeamReport(
     val matchAttributes: MatchAttributes,
     val reports:List<Report>
 ) {
-    constructor(roster: PubgData?, match: Match?, reports: List<Report>) : this(
+    constructor(roster: PubgData?, match: com.leinb1dr.pubg.afteractionreport.match.Match?, reports: List<Report>) : this(
         (roster!!.attributes as RosterAttributes).stats.rank,
         (roster.attributes as RosterAttributes).won,
         match!!.data.data!![0].attributes as MatchAttributes,
