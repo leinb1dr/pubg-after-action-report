@@ -19,6 +19,10 @@ class DiscordEventDeserializer : StdDeserializer<DiscordEvent>(DiscordEvent::cla
     override fun deserialize(p: JsonParser?, ctxt: DeserializationContext?): DiscordEvent {
         val tree = p!!.codec.readTree<JsonNode>(p)
         return when (tree.get("op").asInt()) {
+            0 -> when (tree.get("t").asText()) {
+                "INTERACTION_CREATE" -> p.codec.treeToValue(tree, Interaction::class.java)
+                else -> p.codec.treeToValue(tree, Dispatch::class.java)
+            }
             10 -> p.codec.treeToValue(tree, Hello::class.java)
             11 -> p.codec.treeToValue(tree, HeartBeatAck::class.java)
             else -> p.codec.treeToValue(tree, DebugMessage::class.java)
