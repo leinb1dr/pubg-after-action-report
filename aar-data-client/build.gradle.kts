@@ -1,8 +1,8 @@
 plugins {
     id("idea")
     id("org.springframework.boot") version "2.7.5" apply false
-    kotlin("jvm") version "1.7.21"
-    kotlin("plugin.spring") version "1.7.21"
+    kotlin("jvm") version "1.7.22"
+    kotlin("plugin.spring") version "1.7.22"
 }
 
 group = "com.leinb1dr.pub"
@@ -23,7 +23,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
-    testImplementation("com.ninja-squad:springmockk:3.1.1")
+    testImplementation("com.ninja-squad:springmockk:3.1.2")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(module = "junit")
         exclude(module = "mockito-core")
