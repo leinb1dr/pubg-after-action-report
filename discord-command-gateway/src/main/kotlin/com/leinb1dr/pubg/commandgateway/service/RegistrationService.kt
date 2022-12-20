@@ -16,7 +16,7 @@ class RegistrationService(
     @Autowired val playerDetailsService: PlayerDetailsService
 ) {
 
-    fun unregister(discordId: String): Mono<User> = userService.deleteUserByDiscordId(discordId)
+    fun unregister(discordId: String): Mono<Void> = userService.deleteUserByDiscordId(discordId)
 
     fun register(discordId: String, discordName: String, username: String): Mono<User> =
         userService.getUserByDiscordId(discordId)

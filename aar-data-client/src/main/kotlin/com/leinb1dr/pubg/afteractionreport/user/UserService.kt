@@ -23,6 +23,6 @@ class UserService(@Autowired private val userRepository: UserRepository) {
         userRepository.findAndSetSeasonStatsByPubgId(pubgId, seasonStats)
 
     fun registerUser(user: User) = userRepository.save(user)
-    fun deleteUserByDiscordId(discordId: String): Mono<User> = userRepository.deleteByDiscordId(discordId)
+    fun deleteUserByDiscordId(discordId: String): Mono<Void> = userRepository.deleteByDiscordId(discordId)
 
 }
