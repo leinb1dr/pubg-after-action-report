@@ -17,5 +17,6 @@ interface UserRepository : ReactiveMongoRepository<User, String> {
     fun findByPubgId(pubgId: String): Mono<User>
 
     fun findByDiscordId(discordId: String): Mono<User>
+    fun deleteByDiscordId(discordId: String): Mono<Void>
 
 }
