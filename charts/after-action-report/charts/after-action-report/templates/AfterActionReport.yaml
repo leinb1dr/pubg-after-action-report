@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "aar.fullname" . }}
+  name: {{ include "fullname" . }}
   labels:
-    app: {{ include "aar.fullname" . }}
+    app: {{ include "fullname" . }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "aar.fullname" . }}
+      app: {{ include "fullname" . }}
   template:
     metadata:
       labels:
-        app: {{ include "aar.fullname" . }}
+        app: {{ include "fullname" . }}
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
     spec:
       containers:
-        - name: {{ include "aar.fullname" . }}
+        - name: {{ include "fullname" . }}
           image: {{ .Values.image.repository }}
           imagePullPolicy: Always
           ports:
@@ -51,44 +51,44 @@ spec:
             - name: SPRING_SECURITY_USER_NAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "aar.fullname" . }}-secret
+                  name: {{ include "fullname" . }}-secret
                   key: managementUser
             - name: SPRING_SECURITY_USER_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "aar.fullname" . }}-secret
+                  name: {{ include "fullname" . }}-secret
                   key: managementPassword
             - name: APP_PUBG_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "aar.fullname" . }}-secret
+                  name: {{ include "fullname" . }}-secret
                   key: pubgToken
             - name: APP_DISCORDWEBHOOK
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "aar.fullname" . }}-secret
+                  name: {{ include "fullname" . }}-secret
                   key: discordWebHook
             - name: MONGO_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "aar.fullname" . }}-secret
+                  name: {{ include "fullname" . }}-secret
                   key: dbUsername
             - name: MONGO_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "aar.fullname" . }}-secret
+                  name: {{ include "fullname" . }}-secret
                   key: dbPassword
             - name: MONGO_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: {{ include "aar.fullname" . }}-config
+                  name: {{ include "fullname" . }}-config
                   key: mongoHost
             - name: MONGO_DATABASE
               valueFrom:
                 configMapKeyRef:
-                  name: {{ include "aar.fullname" . }}-config
+                  name: {{ include "fullname" . }}-config
                   key: databaseName
       volumes:
         - name: serviceaccount-secret
           secret:
-            secretName: {{ include "aar.fullname" . }}-serviceaccount-secret
+            secretName: {{ include "fullname" . }}-serviceaccount-secret

@@ -49,7 +49,7 @@ jobs:
           username: leinb1dr
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       # Build and push docker
-      - name: Build and push
+      - name: Build and push report generator
         uses: docker/build-push-action@v3
         if: github.ref == 'refs/heads/main'
         with:
@@ -57,6 +57,14 @@ jobs:
           file: Dockerfile-report-generator
           push: true
           tags: leinb1dr/after-action-report:latest
+      - name: Build and push discord commands
+          uses: docker/build-push-action@v3
+          if: github.ref == 'refs/heads/main'
+          with:
+            context: .
+            file: Dockerfile-discord-commands
+            push: true
+            tags: leinb1dr/discord-commands:latest
 
       # Tag for ArgoCD to do its thing
       - name: Tag for deploy

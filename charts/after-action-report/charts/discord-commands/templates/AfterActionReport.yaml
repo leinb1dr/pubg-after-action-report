@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fullname" . }}
+  labels:
+    app: {{ include "fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "fullname" . }}
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+    spec:
+      containers:
+        - name: {{ include "fullname" . }}
+          image: {{ .Values.image.repository }}
+          imagePullPolicy: Always
+          ports:
+          - name: aar
+            containerPort: {{ .Values.image.port }}
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 120
+            periodSeconds: 15
+          resources:
+            limits:
+              cpu: 250m
+              ephemeral-storage: 10Mi
+              memory: 512Mi
+            requests:
+              cpu: 250m
+              ephemeral-storage: 10Mi
+              memory: 512Mi
+          volumeMounts:
+            - name: serviceaccount-secret
+              mountPath: /var/secrets/google
+          envFrom:
+            - secretRef:
+                name: {{ include "fullname" . }}-secret
+            - configMapRef:
+                name: {{ include "fullname" . }}-config
+      volumes:
+        - name: serviceaccount-secret
+          secret:
+            secretName: {{ include "fullname" . }}-serviceaccount-secret

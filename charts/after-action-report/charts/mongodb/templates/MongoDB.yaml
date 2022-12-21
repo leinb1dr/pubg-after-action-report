@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "mongo.fullname" . }}
+  name: {{ include "fullname" . }}
 spec:
-  serviceName: {{ include "mongo.fullname" . }}
+  serviceName: {{ include "fullname" . }}
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "mongo.fullname" . }}
+      app: {{ include "fullname" . }}
   template:
     metadata:
       labels:
-        app: {{ include "mongo.fullname" . }}
+        app: {{ include "fullname" . }}
     spec:
       containers:
-        - name: {{ include "mongo.fullname" . }}
+        - name: {{ include "fullname" . }}
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           ports:
           - name: mongodb
@@ -23,22 +23,22 @@ spec:
             - name: MONGO_INITDB_DATABASE
               valueFrom:
                 configMapKeyRef:
-                  name: {{ include "mongo.fullname" . }}-config
+                  name: {{ include "fullname" . }}-config
                   key: database-name
             - name: MONGO_INITDB_ROOT_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "mongo.fullname" . }}-secret
+                  name: {{ include "fullname" . }}-secret
                   key: MONGO_ROOT_USERNAME
                   optional: false
             - name: MONGO_INITDB_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "mongo.fullname" . }}-secret
+                  name: {{ include "fullname" . }}-secret
                   key: MONGO_ROOT_PASSWORD
                   optional: false
           volumeMounts:
-            - name: {{ include "mongo.fullname" . }}-data
+            - name: {{ include "fullname" . }}-data
               mountPath: /data/db
           resources:
             limits:
@@ -51,7 +51,7 @@ spec:
               memory: 512Mi
   volumeClaimTemplates:
     - metadata:
-        name: {{ include "mongo.fullname" . }}-data
+        name: {{ include "fullname" . }}-data
       spec:
         accessModes: [ "ReadWriteOnce" ]
         resources:
