@@ -1,7 +1,7 @@
 plugins {
     id("idea")
     id("org.springframework.boot") version "2.7.5" apply false
-    kotlin("jvm") version "1.7.22"
+    kotlin("jvm") version "1.8.0"
     kotlin("plugin.spring") version "1.7.22"
 }
 
