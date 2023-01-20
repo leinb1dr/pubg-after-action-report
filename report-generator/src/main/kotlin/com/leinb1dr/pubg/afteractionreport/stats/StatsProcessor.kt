@@ -4,6 +4,7 @@ import com.google.common.cache.CacheBuilder
 import com.leinb1dr.pubg.afteractionreport.core.MatchAttributes
 import com.leinb1dr.pubg.afteractionreport.core.ParticipantAttributes
 import com.leinb1dr.pubg.afteractionreport.core.PubgData
+import com.leinb1dr.pubg.afteractionreport.core.SeasonStats
 import com.leinb1dr.pubg.afteractionreport.match.MatchProcessor
 import com.leinb1dr.pubg.afteractionreport.player.match.PlayerMatch
 import com.leinb1dr.pubg.afteractionreport.report.RawReportStats
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 @Service
@@ -51,9 +53,11 @@ class StatsProcessor(
     private fun Flux<StatsProcessorContext>.gatherSeasonStatsForParticipants(): Flux<StatsProcessorContext> =
         this.flatMap { context ->
             userService.getUserByPubgId((context.participant!!.attributes as ParticipantAttributes).stats.playerId)
+                .switchIfEmpty(Mono.error(MissingResourceException("There is no player", "User", (context.participant!!.attributes as ParticipantAttributes).stats.playerId)))
                 .map { it.seasonStats[(context.match!!.data.data!![0].attributes as MatchAttributes).gameMode] }
                 .map { it?.let { it1 -> Stats.create(it1) } }
                 .map { RawReportStats(context.participant!!, context.match!!, it) }
+                .onErrorReturn(RawReportStats(context.participant!!, context.match!!, Stats.DefaultStats(stats = SeasonStats())))
                 .map {
                     context.rawReportStats = it
                     context
