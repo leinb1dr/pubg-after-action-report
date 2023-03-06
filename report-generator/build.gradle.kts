@@ -63,7 +63,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-	testImplementation("com.ninja-squad:springmockk:3.1.2")
+	testImplementation("com.ninja-squad:springmockk:4.0.1")
 	testImplementation("org.springframework.boot:spring-boot-starter-test"){
 		exclude(module = "junit")
 		exclude(module = "mockito-core")
